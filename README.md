@@ -4,10 +4,11 @@ This is Alan's real `chezmoi` source of truth.
 
 It is intended to support the normal new-machine flow:
 
-1. install `lpass`
-2. log into LastPass
-3. install `chezmoi`
-4. run `chezmoi init --apply <repo>`
+1. install `chezmoi`
+2. run `chezmoi init --apply <repo>`
+3. let the first apply install `lpass`
+4. run `lpass login`
+5. run `chezmoi apply` again so secrets render
 
 The repo is designed to be public-safe:
 
@@ -24,11 +25,16 @@ On a fresh Debian machine:
 chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 ```
 
-This assumes:
+Then:
 
-- `lpass` is installed
-- `lpass login` has already succeeded
-- `chezmoi` is installed
+```bash
+lpass login
+chezmoi apply
+```
+
+The first apply is expected to succeed before LastPass login. Secret rendering
+is intentionally deferred until `lpass login` succeeds and a later
+`chezmoi apply` runs.
 
 ## LastPass Items
 
@@ -69,10 +75,34 @@ This repo currently expects these LastPass entries:
 Package installation is driven by:
 
 - `.chezmoidata/packages.yaml`
+- `run_once_before_10-install-lastpass-cli.sh.tmpl`
 - `run_onchange_after_20-install-packages.sh.tmpl`
 
 That follows the standard `chezmoi` pattern of declarative package data plus
-an imperative install script.
+imperative install scripts.
+
+The LastPass CLI package is built locally on Linux with:
+
+- upstream `lastpass-cli`
+- Debian build metadata shipped by upstream
+- `DEB_BUILD_OPTIONS=nocheck`
+
+The `nocheck` override is intentional because the upstream package test suite
+is currently failing on Debian 13 even though the package build itself
+completes successfully.
+
+## Secret Rendering
+
+LastPass-backed files are rendered by:
+
+- `run_after_40-render-lastpass-secrets.sh.tmpl`
+
+That hook is intentionally tolerant:
+
+- if `lpass` is not installed yet, it exits cleanly
+- if `lpass` is not logged in yet, it exits cleanly
+- after `lpass login`, a normal `chezmoi apply` renders the secret-bearing
+  files
 
 ## GNOME State
 
@@ -91,25 +121,20 @@ Important paths:
 
 ```text
 .chezmoidata/packages.yaml
+.chezmoi.toml.tmpl
 dot_bashrc
 dot_bash_aliases
 dot_profile
 dot_gitconfig
-dot_api_keys.tmpl
 dot_ssh/config
-private_dot_ssh/id_ed25519.tmpl
-private_dot_ssh/id_ed25519.pub.tmpl
-private_dot_config/sops/age/keys.txt.tmpl
 dot_config/
   Code/User/settings.json
   mimeapps.list
   wsub/gh/config.yml
-  wsub/gh/hosts.yml.tmpl
-  wsub/github-token.env.tmpl
-private_dot_codex/
-  auth.json.tmpl
+run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
+run_after_40-render-lastpass-secrets.sh.tmpl
 gnome/dconf/
   desktop-session.ini
   shell.ini

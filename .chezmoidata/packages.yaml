@@ -13,3 +13,18 @@ packages:
       - xclip
       - gnome-shell-extension-dashtodock
       - sshpass
+    lastpass_build_deps:
+      - cmake
+      - ca-certificates
+      - debhelper
+      - docbook-xsl
+      - dpkg-dev
+      - asciidoc
+      - build-essential
+      - git
+      - libcurl4-openssl-dev
+      - libssl-dev
+      - libxml2-dev
+      - pkg-config
+      - quilt
+      - xsltproc

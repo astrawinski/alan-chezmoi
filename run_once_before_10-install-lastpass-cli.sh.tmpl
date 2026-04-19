@@ -1,0 +1,28 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -eu
+
+if command -v lpass >/dev/null 2>&1; then
+  exit 0
+fi
+
+sudo apt-get update
+sudo apt-get install -y \
+{{- range .packages.linux.lastpass_build_deps }}
+  {{ . }} \
+{{- end }}
+
+build_root="${HOME}/.cache/chezmoi-build/lastpass-cli"
+rm -rf "${build_root}"
+mkdir -p "${build_root}"
+
+git clone https://github.com/lastpass/lastpass-cli.git "${build_root}/src"
+(
+  cd "${build_root}/src"
+  DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -us -uc -b
+)
+
+package_path="$(find "${build_root}" -maxdepth 1 -type f -name 'lastpass-cli_*.deb' | sort | tail -n 1)"
+[ -n "${package_path}" ]
+sudo apt-get install -y "${package_path}"
+{{ end -}}

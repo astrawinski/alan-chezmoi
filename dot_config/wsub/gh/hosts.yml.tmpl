@@ -1,4 +1,0 @@
-github.com:
-    user: {{ .github_user | quote }}
-    oauth_token: {{ (index (lastpass "GitHub Personal Access Token") 0).password | quote }}
-    git_protocol: https
