@@ -46,11 +46,6 @@ This repo currently expects these LastPass entries:
     - `~/.config/wsub/github-token.env`
     - `~/.config/wsub/gh/hosts.yml`
 
-- `WSUB/Codex Auth`
-  - raw JSON stored in the note body
-  - used for:
-    - `~/.codex/auth.json`
-
 - `WSUB/API Keys`
   - raw env-style file content stored in the note body
   - used for:
