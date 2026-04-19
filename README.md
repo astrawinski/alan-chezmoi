@@ -1,105 +1,115 @@
-# Alan User-State Bootstrap Seed
+# Alan Chezmoi
 
-This directory is the checked-in bootstrap seed for Alan's roaming user state.
+This is Alan's real `chezmoi` source of truth.
 
-It is intentionally shaped like a `chezmoi` source tree so WSUB can seed a new
-local user-state checkout before a separately owned external user-state repo is
-available.
+It is intended to support the normal new-machine flow:
 
-It is not intended to remain Alan's durable source of truth once that external
-repo exists. WSUB should eventually copy this tree only as an initial seed and
-then follow the external `workstation_user_state_origin_url`.
+1. install `lpass`
+2. log into LastPass
+3. install `chezmoi`
+4. run `chezmoi init --apply <repo>`
 
-Current first-slice ownership:
+The repo is designed to be public-safe:
 
-- shell dotfiles
-- Git config
-- VS Code user settings
-- browser default MIME state
-- GitHub auth file paths
-- Codex auth file path
-- `.api_keys`
-- bounded GNOME dconf subtree files
-- Syncthing and portable-backup intent
-- developer `wsub` checkout intent
-- manual follow-up and secret-backed-state annotations
+- no secret values are committed
+- secret-bearing files are rendered from LastPass at apply time
+- package installation happens through `chezmoi` data plus `run_onchange_`
+  scripts
 
-Later slices:
+## Bootstrap
 
-- browser/session auth and broader personal secret decisions
+On a fresh Debian machine:
 
-Current GNOME roaming state scope:
+```bash
+chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
+```
+
+This assumes:
+
+- `lpass` is installed
+- `lpass login` has already succeeded
+- `chezmoi` is installed
+
+## LastPass Items
+
+This repo currently expects these LastPass entries:
+
+- `GitHub Personal Access Token`
+  - `password`
+  - used for:
+    - `~/.config/wsub/github-token.env`
+    - `~/.config/wsub/gh/hosts.yml`
+
+- `Codex Auth`
+  - raw JSON stored in the note body
+  - used for:
+    - `~/.codex/auth.json`
+
+- `WSUB API Keys`
+  - raw env-style file content stored in the note body
+  - used for:
+    - `~/.api_keys`
+
+- `GitHub SSH Key`
+  - note fields:
+    - `privateKey:`
+    - `publicKey:`
+  - used for:
+    - `~/.ssh/id_ed25519`
+    - `~/.ssh/id_ed25519.pub`
+
+- `SOPS Age Key`
+  - note fields:
+    - `privateKey:`
+  - used for:
+    - `~/.config/sops/age/keys.txt`
+
+## Package Installation
+
+Package installation is driven by:
+
+- `.chezmoidata/packages.yaml`
+- `run_onchange_after_20-install-packages.sh.tmpl`
+
+That follows the standard `chezmoi` pattern of declarative package data plus
+an imperative install script.
+
+## GNOME State
+
+Bounded GNOME state lives under:
 
 - `gnome/dconf/desktop-session.ini`
 - `gnome/dconf/shell.ini`
 - `gnome/dconf/power.ini`
-- bounded exported `dconf` subtree content, not raw `~/.config/dconf/user`
 
-Current Linux package manifest scope:
+It is applied only when the machine is running a GNOME session with a usable
+session bus.
 
-- `packages/packages.yaml`
-- `desktop.enabled` and `desktop.family` for bounded Linux desktop intent
-- `apt_packages` for narrow extra apt package names
-- `package_classes` for clearly personal WSUB-known package classes
+## Repo Shape
 
-Current roaming portable-state intent scope:
-
-- `intent/portable-state.yaml`
-- Syncthing enablement and service enablement
-- retained portable-backup enablement, default scope, and named group
-  selections
-
-Current roaming repo-checkout intent scope:
-
-- `intent/repo-checkout.yaml`
-- whether the profile-mapped user should receive a personal `~/src/wsub`
-  checkout for developer work
-
-Current roaming annotation scope:
-
-- `notes/manual-follow-up.yaml`
-- manual app follow-up notes
-- secret-backed-state reminders that remain intentionally outside automated
-  restore
-
-Current supported desktop families:
-
-- `gnome`
-
-Current allowed package classes:
-
-- `browser`
-- `codex_cli`
-- `container_runtime`
-- `developer_tooling`
-- `discord`
-- `document_tooling`
-- `remote_access`
-- `signal`
-
-Expected minimum tree shape:
+Important paths:
 
 ```text
+.chezmoidata/packages.yaml
 dot_bashrc
 dot_bash_aliases
 dot_profile
 dot_gitconfig
-dot_api_keys
+dot_api_keys.tmpl
+dot_ssh/config
+private_dot_ssh/id_ed25519.tmpl
+private_dot_ssh/id_ed25519.pub.tmpl
+private_dot_config/sops/age/keys.txt.tmpl
 dot_config/
   Code/User/settings.json
   mimeapps.list
   wsub/gh/config.yml
-  wsub/gh/hosts.yml
-  wsub/github-token.env
+  wsub/gh/hosts.yml.tmpl
+  wsub/github-token.env.tmpl
 private_dot_codex/
-  auth.json
-intent/
-  portable-state.yaml
-  repo-checkout.yaml
-notes/
-  manual-follow-up.yaml
-packages/
-  packages.yaml
+  auth.json.tmpl
+run_onchange_after_20-install-packages.sh.tmpl
+run_onchange_after_30-load-gnome-dconf.sh.tmpl
 gnome/dconf/
   desktop-session.ini
   shell.ini

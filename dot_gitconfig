@@ -1,4 +1,4 @@
-; Managed by chezmoi from the Alan Linux user-state bootstrap starter.
+; Managed by chezmoi from Alan's user-state source of truth.
 [init]
   defaultBranch = main
 [pull]

@@ -1,0 +1,15 @@
+packages:
+  linux:
+    apt:
+      - bash-completion
+      - curl
+      - git
+      - gh
+      - jq
+      - neovim
+      - ripgrep
+      - syncthing
+      - tmux
+      - xclip
+      - gnome-shell-extension-dashtodock
+      - sshpass
