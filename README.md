@@ -40,23 +40,23 @@ is intentionally deferred until `lpass login` succeeds and a later
 
 This repo currently expects these LastPass entries:
 
-- `GitHub Personal Access Token`
+- `WSUB/GitHub Personal Access Token`
   - `password`
   - used for:
     - `~/.config/wsub/github-token.env`
     - `~/.config/wsub/gh/hosts.yml`
 
-- `Codex Auth`
+- `WSUB/Codex Auth`
   - raw JSON stored in the note body
   - used for:
     - `~/.codex/auth.json`
 
-- `WSUB API Keys`
+- `WSUB/API Keys`
   - raw env-style file content stored in the note body
   - used for:
     - `~/.api_keys`
 
-- `GitHub SSH Key`
+- `WSUB/GitHub SSH Key`
   - note fields:
     - `privateKey:`
     - `publicKey:`
@@ -64,7 +64,7 @@ This repo currently expects these LastPass entries:
     - `~/.ssh/id_ed25519`
     - `~/.ssh/id_ed25519.pub`
 
-- `SOPS Age Key`
+- `WSUB/SOPS Age Key`
   - note fields:
     - `privateKey:`
   - used for:
