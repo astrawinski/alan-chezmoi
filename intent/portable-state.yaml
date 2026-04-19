@@ -1,0 +1,35 @@
+schema: 1
+
+linux:
+  syncthing:
+    enabled: true
+    service_enabled: true
+  portable_backup:
+    enabled: true
+    default_scope: both
+    secret_groups_enabled:
+      - ssh
+      - wsub_ssh_identity
+      - age
+      - keyrings
+      - github_auth
+      - codex_auth
+      - portable_backup_keys
+      - api_keys
+      - gnupg_state
+    sync_groups_enabled:
+      - desktop
+      - documents
+      - music
+      - pictures
+      - public
+      - templates
+      - videos
+    config_groups_enabled:
+      - wsub_config
+      - git_config
+      - shell_state
+      - editor_state
+      - codex_skills
+    backup_only_groups_enabled:
+      - provider_release

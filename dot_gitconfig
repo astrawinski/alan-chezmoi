@@ -1,0 +1,12 @@
+; Managed by chezmoi from the Alan Linux user-state bootstrap starter.
+[init]
+  defaultBranch = main
+[pull]
+  ff = only
+[fetch]
+  prune = true
+[core]
+  editor = code --wait
+[user]
+  name = Alan Strawinski
+  email = alan@strawinski.net

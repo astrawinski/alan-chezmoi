@@ -1,0 +1,9 @@
+# Managed by chezmoi from the Alan Linux user-state bootstrap starter.
+
+if [ -f "$HOME/.profile" ]; then
+  . "$HOME/.profile"
+fi
+
+if [ -f "$HOME/.bash_aliases" ]; then
+  . "$HOME/.bash_aliases"
+fi

@@ -1,0 +1,18 @@
+schema: 1
+
+linux:
+  desktop:
+    enabled: true
+    family: gnome
+  apt_packages:
+    - gnome-shell-extension-dashtodock
+    - sshpass
+  package_classes:
+    - browser
+    - codex_cli
+    - container_runtime
+    - developer_tooling
+    - discord
+    - document_tooling
+    - remote_access
+    - signal
