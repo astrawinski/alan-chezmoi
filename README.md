@@ -52,6 +52,12 @@ This repo currently expects these LastPass entries:
     - `~/.api_keys`
   - optional; only needed if you actually use shared env-style API keys
 
+- `WSUB/secret-onedrive-refresh-token`
+  - `password`
+  - used for:
+    - `~/.config/onedrive/refresh_token`
+  - optional; only needed on hosts that actually use the OneDrive client
+
 - `WSUB/secret-github-ssh`
   - note fields:
     - `privateKey:`
@@ -187,6 +193,7 @@ dot_gitconfig
 dot_config/
   Code/User/settings.json
   mimeapps.list
+  onedrive/config
   wsub/gh/config.yml
 run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
