@@ -34,7 +34,9 @@ refresh-workstation-secrets
 
 The first apply is expected to succeed before LastPass login. Secret rendering
 is intentionally deferred until `lpass login` succeeds and the explicit
-refresh helper runs.
+refresh helper runs. Managed `~/src` repo checkouts are also retried from that
+same secret-refresh step, after the GitHub SSH key and SSH config have been
+restored.
 
 ## LastPass Items
 
@@ -118,6 +120,10 @@ It runs during `chezmoi apply` on a best-effort basis and is retried
 automatically after `refresh-workstation-secrets`, when the GitHub SSH key has
 been refreshed. Existing unexpected directories or repos with the wrong origin
 are warned about and left alone instead of being rewritten.
+
+Normal operator flow should not need `sync-user-repos` directly. Treat it as a
+repair command if a managed checkout is missing or the automatic retry could
+not complete during bootstrap.
 
 Linux package data is split into:
 
