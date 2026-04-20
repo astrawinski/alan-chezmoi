@@ -70,12 +70,14 @@ packages:
           - sync_clients
         apt_extra: []
       wsub-mbp01:
-        desktop_family: none
+        desktop_family: gnome
         roles:
           - bootstrap_auth
           - dev_cli
           - live_sync
           - management_tooling
+          - virtualization
+          - virtualization_gui
           - sync_clients
         apt_extra: []
     lastpass_build_deps:
