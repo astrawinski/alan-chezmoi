@@ -5,7 +5,6 @@ packages:
         version: "0.120.0"
     apt_core_common:
       - bash-completion
-      - chezmoi
       - curl
       - git
       - neovim
@@ -15,10 +14,11 @@ packages:
     apt_gui_common:
       - brave-browser
       - code
-      - discord
       - fonts-firacode
       - remmina
       - signal-desktop
+    external_deb_common:
+      - discord
     role_packages:
       bootstrap_auth:
         - age

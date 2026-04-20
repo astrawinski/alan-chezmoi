@@ -222,6 +222,7 @@ def main() -> int:
     modeled_packages: list[str] = []
     modeled_packages.extend(packages.get("apt_core_common", []) or [])
     modeled_packages.extend(packages.get("apt_gui_common", []) or [])
+    modeled_packages.extend(packages.get("external_deb_common", []) or [])
     modeled_packages.extend(packages.get("desktop_packages", {}).get(desktop_family, []) or [])
     for role_name in roles:
         modeled_packages.extend(packages.get("role_packages", {}).get(role_name, []) or [])

@@ -1,0 +1,50 @@
+{{- if eq .chezmoi.os "linux" -}}
+{{- $linux := .packages.linux -}}
+{{- $aptGuiCommon := $linux.apt_gui_common | default (list) -}}
+{{- $needsBrave := false -}}
+{{- $needsCode := false -}}
+{{- $needsSignal := false -}}
+{{- range $aptGuiCommon }}
+{{- if eq . "brave-browser" }}{{- $needsBrave = true -}}{{- end -}}
+{{- if eq . "code" }}{{- $needsCode = true -}}{{- end -}}
+{{- if eq . "signal-desktop" }}{{- $needsSignal = true -}}{{- end -}}
+{{- end -}}
+{{- if or $needsBrave $needsCode $needsSignal -}}
+#!/bin/sh
+set -eu
+
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gpg wget apt-transport-https
+
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "${tmpdir}"' EXIT
+
+{{- if $needsBrave }}
+sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+  https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+sudo curl -fsSLo /etc/apt/sources.list.d/brave-browser-release.sources \
+  https://brave-browser-apt-release.s3.brave.com/brave-browser.sources
+{{ end -}}
+
+{{- if $needsCode }}
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > "${tmpdir}/microsoft.gpg"
+sudo install -D -o root -g root -m 644 "${tmpdir}/microsoft.gpg" /usr/share/keyrings/microsoft.gpg
+cat <<'EOF' | sudo tee /etc/apt/sources.list.d/vscode.sources >/dev/null
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64,arm64,armhf
+Signed-By: /usr/share/keyrings/microsoft.gpg
+EOF
+{{ end -}}
+
+{{- if $needsSignal }}
+wget -qO- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg
+sudo install -D -o root -g root -m 644 signal-desktop-keyring.gpg /usr/share/keyrings/signal-desktop-keyring.gpg
+rm -f signal-desktop-keyring.gpg
+wget -qO "${tmpdir}/signal-desktop.sources" https://updates.signal.org/static/desktop/apt/signal-desktop.sources
+sudo install -D -o root -g root -m 644 "${tmpdir}/signal-desktop.sources" /etc/apt/sources.list.d/signal-desktop.sources
+{{ end -}}
+{{ end -}}
+{{ end -}}

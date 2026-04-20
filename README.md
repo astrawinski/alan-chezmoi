@@ -80,7 +80,9 @@ Package installation is driven by:
 - `.chezmoidata/packages.yaml`
 - `.chezmoidata/vscode.yaml`
 - `run_once_before_10-install-lastpass-cli.sh.tmpl`
+- `run_onchange_before_20-configure-third-party-apt-sources.sh.tmpl`
 - `run_onchange_after_20-install-packages.sh.tmpl`
+- `run_onchange_after_21-install-discord.sh.tmpl`
 - `run_onchange_after_25-install-vscode-extensions.sh.tmpl`
 - `run_onchange_after_26-install-npm-global-tools.sh.tmpl`
 - `run_onchange_after_27-enable-ssh-agent.sh.tmpl`
@@ -104,6 +106,8 @@ Linux package data is split into:
   - core command-line packages shared across machines
 - `apt_gui_common`
   - desktop-neutral GUI packages shared across machines
+- `external_deb_common`
+  - official Debian packages fetched directly from an upstream download endpoint
 - `role_packages`
   - reusable package groups keyed by workstation intent
 - `desktop_packages`
@@ -121,6 +125,7 @@ The install hook merges:
 
 - core CLI packages
 - GUI-common packages
+- directly-installed external Debian packages
 - role packages for the current host
 - desktop-family packages for `{{ .chezmoi.hostname }}`
 - host-specific extra packages
@@ -211,7 +216,9 @@ dot_config/
   onedrive/config
   wsub/gh/config.yml
 run_once_before_10-install-lastpass-cli.sh.tmpl
+run_onchange_before_20-configure-third-party-apt-sources.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
+run_onchange_after_21-install-discord.sh.tmpl
 run_onchange_after_25-install-vscode-extensions.sh.tmpl
 run_onchange_after_26-install-npm-global-tools.sh.tmpl
 run_onchange_after_27-enable-ssh-agent.sh.tmpl

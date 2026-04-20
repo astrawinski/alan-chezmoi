@@ -1,0 +1,34 @@
+{{- if eq .chezmoi.os "linux" -}}
+{{- $linux := .packages.linux -}}
+{{- $host := get $linux.hosts .chezmoi.hostname | default dict -}}
+{{- $desktopFamily := get $host "desktop_family" | default "none" -}}
+{{- $desktopPackages := get $linux.desktop_packages $desktopFamily | default (list) -}}
+{{- $externalDebCommon := get $linux "external_deb_common" | default (list) -}}
+{{- $rolePackages := $linux.role_packages | default dict -}}
+{{- $roles := get $host "roles" | default (list) -}}
+{{- $aptExtra := get $host "apt_extra" | default (list) -}}
+{{- $needsDiscord := false -}}
+{{- range $externalDebCommon }}{{- if eq . "discord" }}{{- $needsDiscord = true -}}{{- end -}}{{- end -}}
+{{- range $desktopPackages }}{{- if eq . "discord" }}{{- $needsDiscord = true -}}{{- end -}}{{- end -}}
+{{- range $roles }}
+{{- $roleName := . -}}
+{{- range (get $rolePackages $roleName | default (list)) }}
+{{- if eq . "discord" }}{{- $needsDiscord = true -}}{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- range $aptExtra }}{{- if eq . "discord" }}{{- $needsDiscord = true -}}{{- end -}}{{- end -}}
+{{- if $needsDiscord -}}
+#!/bin/sh
+set -eu
+
+if dpkg-query -W -f='${Status}' discord 2>/dev/null | grep -Fq 'install ok installed'; then
+  exit 0
+fi
+
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "${tmpdir}"' EXIT
+
+curl -fsSL 'https://discord.com/api/download?platform=linux&format=deb' -o "${tmpdir}/discord.deb"
+sudo apt-get install -y "${tmpdir}/discord.deb"
+{{- end -}}
+{{- end -}}
