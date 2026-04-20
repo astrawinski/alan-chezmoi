@@ -5,8 +5,10 @@
 {{- $desktopPackages := get $linux.desktop_packages $desktopFamily | default (list) -}}
 {{- $aptCliCommon := $linux.apt_cli_common | default (list) -}}
 {{- $aptGuiCommon := $linux.apt_gui_common | default (list) -}}
+{{- $rolePackages := $linux.role_packages | default dict -}}
+{{- $roles := get $host "roles" | default (list) -}}
 {{- $aptExtra := get $host "apt_extra" | default (list) -}}
-{{- if or $aptCliCommon $aptGuiCommon $desktopPackages $aptExtra -}}
+{{- if or $aptCliCommon $aptGuiCommon $desktopPackages $roles $aptExtra -}}
 #!/bin/sh
 set -eu
 
@@ -20,6 +22,12 @@ sudo apt-get install -y \
 {{- end }}
 {{- range $desktopPackages }}
   {{ . }} \
+{{- end }}
+{{- range $roles }}
+{{- $roleName := . -}}
+{{- range (get $rolePackages $roleName | default (list)) }}
+  {{ . }} \
+{{- end }}
 {{- end }}
 {{- range $aptExtra }}
   {{ . }} \

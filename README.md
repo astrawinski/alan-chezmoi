@@ -84,6 +84,8 @@ Linux package data is split into:
   - non-desktop-specific command-line packages shared across machines
 - `apt_gui_common`
   - desktop-neutral GUI packages shared across machines
+- `role_packages`
+  - reusable package groups keyed by workstation intent
 - `desktop_packages`
   - package groups keyed by desktop family
 - `hosts`
@@ -92,16 +94,19 @@ Linux package data is split into:
 Hosts should only describe what is unique to that host, for example:
 
 - `desktop_family`
+- `roles`
 - `apt_extra`
 
 The install hook merges:
 
 - CLI-common packages
 - GUI-common packages
+- role packages for the current host
 - desktop-family packages for `{{ .chezmoi.hostname }}`
 - host-specific extra packages
 
-That keeps host blocks small and avoids duplicating the common package set.
+That keeps host blocks small and avoids duplicating shared package intent
+across multiple machines.
 
 The LastPass CLI package is built locally on Linux with:
 

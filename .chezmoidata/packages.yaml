@@ -29,6 +29,18 @@ packages:
       - firefox-esr
       - remmina
       - signal-desktop
+    role_packages:
+      virtualization:
+        - libvirt-clients
+        - libvirt-daemon-system
+        - podman
+        - qemu-system-x86
+      backup_clients:
+        - proxmox-backup-client
+        - rclone
+        - restic
+      sync_clients:
+        - onedrive
     desktop_packages:
       gnome:
         - gnome-shell-extension-dashtodock
@@ -36,9 +48,16 @@ packages:
     hosts:
       wsub-laptop01:
         desktop_family: gnome
-        apt_extra: []
+        roles:
+          - virtualization
+          - backup_clients
+          - sync_clients
+        apt_extra:
+          - chromium
+          - flatpak
       wsub-mbp01:
         desktop_family: none
+        roles: []
         apt_extra: []
     lastpass_build_deps:
       - cmake
