@@ -71,7 +71,12 @@ packages:
         apt_extra: []
       wsub-mbp01:
         desktop_family: none
-        roles: []
+        roles:
+          - bootstrap_auth
+          - dev_cli
+          - live_sync
+          - management_tooling
+          - sync_clients
         apt_extra: []
     lastpass_build_deps:
       - cmake
