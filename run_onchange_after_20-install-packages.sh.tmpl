@@ -3,15 +3,19 @@
 {{- $host := get $linux.hosts .chezmoi.hostname | default dict -}}
 {{- $desktopFamily := get $host "desktop_family" | default "none" -}}
 {{- $desktopPackages := get $linux.desktop_packages $desktopFamily | default (list) -}}
-{{- $aptCommon := $linux.apt_common | default (list) -}}
+{{- $aptCliCommon := $linux.apt_cli_common | default (list) -}}
+{{- $aptGuiCommon := $linux.apt_gui_common | default (list) -}}
 {{- $aptExtra := get $host "apt_extra" | default (list) -}}
-{{- if or $aptCommon $desktopPackages $aptExtra -}}
+{{- if or $aptCliCommon $aptGuiCommon $desktopPackages $aptExtra -}}
 #!/bin/sh
 set -eu
 
 sudo apt-get update
 sudo apt-get install -y \
-{{- range $aptCommon }}
+{{- range $aptCliCommon }}
+  {{ . }} \
+{{- end }}
+{{- range $aptGuiCommon }}
   {{ . }} \
 {{- end }}
 {{- range $desktopPackages }}
