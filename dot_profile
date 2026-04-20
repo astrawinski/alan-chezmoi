@@ -38,6 +38,7 @@ fi
 export WSUB_REPO="${WSUB_REPO:-$HOME/src/wsub}"
 export GH_CONFIG_DIR="$HOME/.config/wsub/gh"
 export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/openssh_agent"
+export LPASS_AGENT_TIMEOUT=0
 
 if [ -f "$HOME/.config/wsub/github-token.env" ]; then
   # shellcheck disable=SC1091
