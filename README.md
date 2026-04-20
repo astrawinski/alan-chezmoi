@@ -120,6 +120,32 @@ The `nocheck` override is intentional because the upstream package test suite
 is currently failing on Debian 13 even though the package build itself
 completes successfully.
 
+## Drift Review
+
+To review live workstation drift before promoting it into repo truth:
+
+```bash
+./scripts/drift-inbox.sh
+```
+
+That compares the current host against:
+
+- modeled apt packages for the current host overlay
+- curated VS Code extension ids in `.chezmoidata/vscode.yaml`
+
+It reports:
+
+- manual packages installed locally but not modeled yet
+- modeled packages that are not installed locally
+- VS Code extensions installed locally but not modeled yet
+- modeled VS Code extensions that are not installed locally
+
+To review a different host overlay from the current machine:
+
+```bash
+./scripts/drift-inbox.sh --host wsub-mbp01
+```
+
 ## Secret Rendering
 
 LastPass-backed files are rendered by:
