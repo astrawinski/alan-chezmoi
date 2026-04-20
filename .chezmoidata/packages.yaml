@@ -30,6 +30,11 @@ packages:
       - remmina
       - signal-desktop
     role_packages:
+      management_tooling:
+        - ansible-lint
+        - tcpdump
+        - terraform
+        - yamllint
       virtualization:
         - libvirt-clients
         - libvirt-daemon-system
@@ -50,6 +55,7 @@ packages:
       wsub-laptop01:
         desktop_family: gnome
         roles:
+          - management_tooling
           - virtualization
           - virtualization_gui
           - sync_clients
