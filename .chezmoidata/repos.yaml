@@ -7,9 +7,6 @@ repos:
     - name: cavekit
       origin: git@github.com:astrawinski/cavekit.git
       upstream: git@github.com:JuliusBrussee/cavekit.git
-    - name: alan-chezmoi
-      origin: git@github.com:astrawinski/alan-chezmoi.git
-      upstream: ""
     - name: terraform-provider-unifi
       origin: git@github.com:astrawinski/terraform-provider-unifi.git
       upstream: ""

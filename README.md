@@ -109,7 +109,6 @@ repo ensures `~/src` exists and converges these checkouts:
 
 - `wsub`
 - `cavekit`
-- `alan-chezmoi`
 - `terraform-provider-unifi`
 
 The sync surface is:
@@ -123,7 +122,9 @@ are warned about and left alone instead of being rewritten.
 
 Normal operator flow should not need `sync-user-repos` directly. Treat it as a
 repair command if a managed checkout is missing or the automatic retry could
-not complete during bootstrap.
+not complete during bootstrap. `alan-chezmoi` itself is intentionally excluded
+from this list when you are using `chezmoi` natively, because the real source
+of truth is `chezmoi source-path` rather than a sibling `~/src` clone.
 
 Linux package data is split into:
 
