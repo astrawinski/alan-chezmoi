@@ -44,3 +44,7 @@ if [ -f "$HOME/.config/wsub/github-token.env" ]; then
   # shellcheck disable=SC1091
   . "$HOME/.config/wsub/github-token.env"
 fi
+
+if [ -n "${BASH_VERSION:-}" ] && [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
+fi
