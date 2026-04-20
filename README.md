@@ -82,9 +82,16 @@ Package installation is driven by:
 - `run_once_before_10-install-lastpass-cli.sh.tmpl`
 - `run_onchange_after_20-install-packages.sh.tmpl`
 - `run_onchange_after_25-install-vscode-extensions.sh.tmpl`
+- `run_onchange_after_26-install-npm-global-tools.sh.tmpl`
 
 That follows the standard `chezmoi` pattern of declarative package and editor
 data plus imperative install scripts.
+
+Global npm tools are declared in `.chezmoidata/packages.yaml` under:
+
+- `packages.linux.npm_global_tools`
+
+That keeps non-apt CLI tools like `codex` out of the Debian package model.
 
 Linux package data is split into:
 
@@ -137,12 +144,15 @@ To review live workstation drift before promoting it into repo truth:
 That compares the current host against:
 
 - modeled apt packages for the current host overlay
+- modeled global npm tools in `packages.linux.npm_global_tools`
 - curated VS Code extension ids in `.chezmoidata/vscode.yaml`
 
 It reports:
 
 - manual packages installed locally but not modeled yet
 - modeled packages that are not installed locally
+- global npm tools installed locally but not modeled yet
+- modeled global npm tools that are not installed locally
 - VS Code extensions installed locally but not modeled yet
 - modeled VS Code extensions that are not installed locally
 
@@ -198,6 +208,7 @@ dot_config/
 run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
 run_onchange_after_25-install-vscode-extensions.sh.tmpl
+run_onchange_after_26-install-npm-global-tools.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
 dot_local/bin/executable_refresh-workstation-secrets.tmpl
 gnome/dconf/

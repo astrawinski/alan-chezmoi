@@ -13,6 +13,8 @@ Usage: scripts/drift-inbox.sh [--host HOSTNAME]
 Report live workstation drift against the current alan-chezmoi model:
 - manual apt packages that are not modeled for the selected host
 - modeled apt packages that are not currently installed
+- global npm tools that are installed but not modeled
+- modeled global npm tools that are not currently installed
 - VS Code extensions that are installed but not modeled
 - modeled VS Code extensions that are not currently installed
 
@@ -235,6 +237,37 @@ def main() -> int:
         ).returncode == 0
         else set()
     )
+    installed_npm_tools = (
+        {
+            line.strip()
+            for line in subprocess.check_output(
+                [
+                    "python3",
+                    "-c",
+                    "\n".join(
+                        [
+                            "import json, subprocess",
+                            "data = json.loads(subprocess.check_output(['npm', '-g', 'ls', '--depth=0', '--json'], text=True))",
+                            "for name in sorted((data.get('dependencies') or {}).keys()):",
+                            "    print(name)",
+                        ]
+                    ),
+                ],
+                text=True,
+            ).splitlines()
+            if line.strip()
+        }
+        if subprocess.run(
+            ["bash", "-lc", "command -v npm >/dev/null 2>&1"],
+            check=False,
+        ).returncode == 0
+        else set()
+    )
+    modeled_npm_tools = {
+        package["name"]
+        for package in (packages.get("npm_global_tools", []) or [])
+        if package.get("name")
+    }
     modeled_vscode_extensions = set(vscode.get("extensions", []) or [])
 
     extra_packages = sorted(
@@ -243,6 +276,8 @@ def main() -> int:
         if pkg not in IGNORED_PACKAGE_NAMES and not pkg.startswith("lib")
     )
     missing_packages = sorted(modeled_package_set - manual_packages)
+    extra_npm_tools = sorted(installed_npm_tools - modeled_npm_tools)
+    missing_npm_tools = sorted(modeled_npm_tools - installed_npm_tools)
     extra_extensions = sorted(installed_vscode_extensions - modeled_vscode_extensions)
     missing_extensions = sorted(modeled_vscode_extensions - installed_vscode_extensions)
 
@@ -260,6 +295,13 @@ def main() -> int:
 
     print_section("Manual packages not modeled", extra_packages)
     print_section("Modeled packages not installed", missing_packages)
+    if installed_npm_tools or modeled_npm_tools:
+        print_section("Global npm tools installed but not modeled", extra_npm_tools)
+        print_section("Modeled global npm tools not installed", missing_npm_tools)
+    else:
+        print("Global npm tool drift")
+        print("(npm not installed and no global npm tools modeled)")
+        print()
 
     if installed_vscode_extensions or modeled_vscode_extensions:
         print_section("VS Code extensions installed but not modeled", extra_extensions)

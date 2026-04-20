@@ -1,5 +1,8 @@
 packages:
   linux:
+    npm_global_tools:
+      - name: "@openai/codex"
+        version: "0.120.0"
     apt_core_common:
       - bash-completion
       - chezmoi
