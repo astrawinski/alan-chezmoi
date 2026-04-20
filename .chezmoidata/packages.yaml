@@ -35,6 +35,10 @@ packages:
         - libvirt-daemon-system
         - podman
         - qemu-system-x86
+      virtualization_gui:
+        - virt-manager
+        - virt-viewer
+        - virtinst
       backup_clients:
         - proxmox-backup-client
         - rclone
@@ -51,11 +55,10 @@ packages:
         desktop_family: gnome
         roles:
           - virtualization
+          - virtualization_gui
           - backup_clients
           - sync_clients
-        apt_extra:
-          - chromium
-          - flatpak
+        apt_extra: []
       wsub-mbp01:
         desktop_family: none
         roles: []
