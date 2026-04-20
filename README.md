@@ -8,7 +8,7 @@ It is intended to support the normal new-machine flow:
 2. run `chezmoi init --apply <repo>`
 3. let the first apply install `lpass`
 4. run `lpass login`
-5. run `chezmoi apply` again so secrets render
+5. run `refresh-workstation-secrets`
 
 The repo is designed to be public-safe:
 
@@ -29,12 +29,12 @@ Then:
 
 ```bash
 lpass login
-chezmoi apply
+refresh-workstation-secrets
 ```
 
 The first apply is expected to succeed before LastPass login. Secret rendering
-is intentionally deferred until `lpass login` succeeds and a later
-`chezmoi apply` runs.
+is intentionally deferred until `lpass login` succeeds and the explicit
+refresh helper runs.
 
 ## LastPass Items
 
@@ -150,14 +150,14 @@ To review a different host overlay from the current machine:
 
 LastPass-backed files are rendered by:
 
-- `run_after_40-render-lastpass-secrets.sh.tmpl`
+- `~/.local/bin/refresh-workstation-secrets`
 
-That hook is intentionally tolerant:
+That helper:
 
-- if `lpass` is not installed yet, it exits cleanly
-- if `lpass` is not logged in yet, it exits cleanly
-- after `lpass login`, a normal `chezmoi apply` renders the secret-bearing
-  files
+- is installed by `chezmoi`
+- requires `lpass` to be installed and logged in
+- renders the secret-bearing files on demand
+- can be rerun any time after LastPass items change
 
 ## GNOME State
 
@@ -192,7 +192,7 @@ run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
 run_onchange_after_25-install-vscode-extensions.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
-run_after_40-render-lastpass-secrets.sh.tmpl
+executable_dot_local/bin/refresh-workstation-secrets.tmpl
 gnome/dconf/
   desktop-session.ini
   shell.ini
