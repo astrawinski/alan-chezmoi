@@ -40,19 +40,19 @@ refresh helper runs.
 
 This repo currently expects these LastPass entries:
 
-- `WSUB/GitHub Personal Access Token`
+- `WSUB/secret-github-pat`
   - `password`
   - used for:
     - `~/.config/wsub/github-token.env`
     - `~/.config/wsub/gh/hosts.yml`
 
-- `WSUB/API Keys`
+- `WSUB/secret-api-keys`
   - raw env-style file content stored in the note body
   - used for:
     - `~/.api_keys`
   - optional; only needed if you actually use shared env-style API keys
 
-- `WSUB/GitHub SSH Key`
+- `WSUB/secret-github-ssh`
   - note fields:
     - `privateKey:`
     - `publicKey:`
@@ -61,7 +61,7 @@ This repo currently expects these LastPass entries:
     - `~/.ssh/id_ed25519.pub`
     - `~/.ssh/config`
 
-- `WSUB/SOPS Age Key`
+- `WSUB/secret-sops-age`
   - note fields:
     - `privateKey:`
   - used for:
