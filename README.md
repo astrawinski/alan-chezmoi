@@ -78,6 +78,7 @@ This repo currently expects these LastPass entries:
 Package installation is driven by:
 
 - `.chezmoidata/packages.yaml`
+- `.chezmoidata/repos.yaml`
 - `.chezmoidata/vscode.yaml`
 - `run_once_before_10-install-lastpass-cli.sh.tmpl`
 - `run_onchange_before_20-configure-third-party-apt-sources.sh.tmpl`
@@ -86,6 +87,7 @@ Package installation is driven by:
 - `run_onchange_after_25-install-vscode-extensions.sh.tmpl`
 - `run_onchange_after_26-install-npm-global-tools.sh.tmpl`
 - `run_onchange_after_27-enable-ssh-agent.sh.tmpl`
+- `run_onchange_after_28-sync-user-repos.sh.tmpl`
 
 That follows the standard `chezmoi` pattern of declarative package and editor
 data plus imperative install scripts.
@@ -99,6 +101,23 @@ Global npm tools are declared in `.chezmoidata/packages.yaml` under:
 - `packages.linux.npm_global_tools`
 
 That keeps non-apt CLI tools like `codex` out of the Debian package model.
+
+Tracked repo checkouts are declared in `.chezmoidata/repos.yaml`. On Linux this
+repo ensures `~/src` exists and converges these checkouts:
+
+- `wsub`
+- `cavekit`
+- `alan-chezmoi`
+- `terraform-provider-unifi`
+
+The sync surface is:
+
+- `~/.local/bin/sync-user-repos`
+
+It runs during `chezmoi apply` on a best-effort basis and is retried
+automatically after `refresh-workstation-secrets`, when the GitHub SSH key has
+been refreshed. Existing unexpected directories or repos with the wrong origin
+are warned about and left alone instead of being rewritten.
 
 Linux package data is split into:
 
@@ -222,6 +241,7 @@ Important paths:
 
 ```text
 .chezmoidata/packages.yaml
+.chezmoidata/repos.yaml
 .chezmoi.toml.tmpl
 dot_bashrc
 dot_bash_aliases
@@ -239,8 +259,10 @@ run_onchange_after_21-install-discord.sh.tmpl
 run_onchange_after_25-install-vscode-extensions.sh.tmpl
 run_onchange_after_26-install-npm-global-tools.sh.tmpl
 run_onchange_after_27-enable-ssh-agent.sh.tmpl
+run_onchange_after_28-sync-user-repos.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
 dot_local/bin/executable_refresh-workstation-secrets.tmpl
+dot_local/bin/executable_sync-user-repos.tmpl
 gnome/dconf/
   desktop-session.ini
   shell.ini

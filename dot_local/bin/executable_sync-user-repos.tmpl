@@ -1,0 +1,60 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -eu
+
+if ! command -v git >/dev/null 2>&1; then
+  printf '[chezmoi] Git is not installed yet; skipping user repo sync.\n' >&2
+  exit 0
+fi
+
+checkout_root="${HOME}/{{ .repos.checkout_root }}"
+mkdir -p "${checkout_root}"
+
+sync_repo() {
+  name="$1"
+  origin="$2"
+  upstream="${3:-}"
+  repo_dir="${checkout_root}/${name}"
+
+  if [ -d "${repo_dir}/.git" ]; then
+    current_origin="$(git -C "${repo_dir}" remote get-url origin 2>/dev/null || true)"
+    if [ "${current_origin}" != "${origin}" ]; then
+      printf '[chezmoi] Repo %s exists with unexpected origin %s; expected %s. Leaving it alone.\n' "${name}" "${current_origin:-<missing>}" "${origin}" >&2
+      return 0
+    fi
+  else
+    if [ -e "${repo_dir}" ]; then
+      printf '[chezmoi] Repo path %s exists but is not a git checkout; leaving it alone.\n' "${repo_dir}" >&2
+      return 0
+    fi
+
+    printf '[chezmoi] Cloning %s into %s\n' "${name}" "${repo_dir}"
+    if ! git clone "${origin}" "${repo_dir}"; then
+      printf '[chezmoi] Failed to clone %s from %s.\n' "${name}" "${origin}" >&2
+      return 1
+    fi
+  fi
+
+  if [ -n "${upstream}" ]; then
+    if git -C "${repo_dir}" remote get-url upstream >/dev/null 2>&1; then
+      current_upstream="$(git -C "${repo_dir}" remote get-url upstream 2>/dev/null || true)"
+      if [ "${current_upstream}" != "${upstream}" ]; then
+        printf '[chezmoi] Repo %s has unexpected upstream %s; expected %s. Leaving it alone.\n' "${name}" "${current_upstream:-<missing>}" "${upstream}" >&2
+      fi
+    else
+      git -C "${repo_dir}" remote add upstream "${upstream}"
+    fi
+  fi
+}
+
+sync_failed=0
+{{- range .repos.managed }}
+if ! sync_repo "{{ .name }}" "{{ .origin }}" "{{ .upstream | default "" }}"; then
+  sync_failed=1
+fi
+{{- end }}
+
+if [ "${sync_failed}" -ne 0 ]; then
+  exit 1
+fi
+{{ end -}}
