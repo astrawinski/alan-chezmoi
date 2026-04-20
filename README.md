@@ -192,7 +192,7 @@ run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
 run_onchange_after_25-install-vscode-extensions.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
-executable_dot_local/bin/refresh-workstation-secrets.tmpl
+dot_local/bin/executable_refresh-workstation-secrets.tmpl
 gnome/dconf/
   desktop-session.ini
   shell.ini
