@@ -1,6 +1,6 @@
 packages:
   linux:
-    apt:
+    apt_common:
       - bash-completion
       - curl
       - git
@@ -11,8 +11,18 @@ packages:
       - syncthing
       - tmux
       - xclip
-      - gnome-shell-extension-dashtodock
       - sshpass
+    desktop_packages:
+      gnome:
+        - gnome-shell-extension-dashtodock
+      none: []
+    hosts:
+      wsub-laptop01:
+        desktop_family: gnome
+        apt_extra: []
+      wsub-mbp01:
+        desktop_family: none
+        apt_extra: []
     lastpass_build_deps:
       - cmake
       - ca-certificates

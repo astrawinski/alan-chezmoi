@@ -78,6 +78,28 @@ Package installation is driven by:
 That follows the standard `chezmoi` pattern of declarative package data plus
 imperative install scripts.
 
+Linux package data is split into:
+
+- `apt_common`
+  - packages shared across machines
+- `desktop_packages`
+  - package groups keyed by desktop family
+- `hosts`
+  - additive host-specific deltas keyed by hostname
+
+Hosts should only describe what is unique to that host, for example:
+
+- `desktop_family`
+- `apt_extra`
+
+The install hook merges:
+
+- common packages
+- desktop-family packages for `{{ .chezmoi.hostname }}`
+- host-specific extra packages
+
+That keeps host blocks small and avoids duplicating the common package set.
+
 The LastPass CLI package is built locally on Linux with:
 
 - upstream `lastpass-cli`
