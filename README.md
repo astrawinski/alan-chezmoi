@@ -83,9 +83,14 @@ Package installation is driven by:
 - `run_onchange_after_20-install-packages.sh.tmpl`
 - `run_onchange_after_25-install-vscode-extensions.sh.tmpl`
 - `run_onchange_after_26-install-npm-global-tools.sh.tmpl`
+- `run_onchange_after_27-enable-ssh-agent.sh.tmpl`
 
 That follows the standard `chezmoi` pattern of declarative package and editor
 data plus imperative install scripts.
+
+The workstation source also enables the stock user-level `ssh-agent.socket` on
+Linux so rebuilds do not depend on incidental session state for the OpenSSH
+agent path.
 
 Global npm tools are declared in `.chezmoidata/packages.yaml` under:
 
@@ -209,6 +214,7 @@ run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
 run_onchange_after_25-install-vscode-extensions.sh.tmpl
 run_onchange_after_26-install-npm-global-tools.sh.tmpl
+run_onchange_after_27-enable-ssh-agent.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
 dot_local/bin/executable_refresh-workstation-secrets.tmpl
 gnome/dconf/
