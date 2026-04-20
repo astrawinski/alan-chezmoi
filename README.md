@@ -50,6 +50,7 @@ This repo currently expects these LastPass entries:
   - raw env-style file content stored in the note body
   - used for:
     - `~/.api_keys`
+  - optional; only needed if you actually use shared env-style API keys
 
 - `WSUB/GitHub SSH Key`
   - note fields:
