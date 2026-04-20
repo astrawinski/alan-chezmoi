@@ -49,7 +49,7 @@ sync_repo() {
 
 sync_failed=0
 {{- range .repos.managed }}
-if ! sync_repo "{{ .name }}" "{{ .origin }}" "{{ .upstream | default "" }}"; then
+if ! sync_repo "{{ .name }}" "{{ .origin }}" "{{ if hasKey . "upstream" }}{{ index . "upstream" }}{{ end }}"; then
   sync_failed=1
 fi
 {{- end }}
