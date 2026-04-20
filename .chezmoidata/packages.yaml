@@ -43,6 +43,7 @@ packages:
         - onedrive
     desktop_packages:
       gnome:
+        - task-gnome-desktop
         - gnome-shell-extension-dashtodock
       none: []
     hosts:
