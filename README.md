@@ -184,6 +184,11 @@ To review a different host overlay from the current machine:
 ./scripts/drift-inbox.sh --host wsub-mbp01
 ```
 
+That `--host` mode only swaps the **modeled overlay**. It still compares
+against the packages and extensions installed on the machine where you run the
+script. It is useful for previewing or reviewing another host contract, but it
+is not proof of what is actually installed on that other host.
+
 ## Secret Rendering
 
 LastPass-backed files are rendered by:
