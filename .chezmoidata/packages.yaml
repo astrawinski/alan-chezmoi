@@ -39,10 +39,6 @@ packages:
         - virt-manager
         - virt-viewer
         - virtinst
-      backup_clients:
-        - proxmox-backup-client
-        - rclone
-        - restic
       sync_clients:
         - onedrive
     desktop_packages:
@@ -56,7 +52,6 @@ packages:
         roles:
           - virtualization
           - virtualization_gui
-          - backup_clients
           - sync_clients
         apt_extra: []
       wsub-mbp01:
