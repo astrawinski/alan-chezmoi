@@ -1,13 +1,20 @@
 packages:
   linux:
     apt_common:
+      - age
       - bash-completion
+      - chezmoi
+      - code
       - curl
+      - fd-find
       - git
       - gh
       - jq
+      - lastpass-cli
       - neovim
       - ripgrep
+      - shellcheck
+      - sops
       - syncthing
       - tmux
       - xclip
