@@ -1,4 +1,8 @@
-{{ if eq .chezmoi.os "linux" -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{- $linux := .packages.linux -}}
+{{- $host := get $linux.hosts .chezmoi.hostname | default dict -}}
+{{- $desktopFamily := get $host "desktop_family" | default "none" -}}
+{{- if eq $desktopFamily "gnome" -}}
 #!/bin/sh
 set -eu
 
@@ -21,4 +25,5 @@ esac
 dconf load /org/gnome/desktop/session/ < "{{ .chezmoi.sourceDir }}/gnome/dconf/desktop-session.ini"
 dconf load /org/gnome/shell/ < "{{ .chezmoi.sourceDir }}/gnome/dconf/shell.ini"
 dconf load /org/gnome/settings-daemon/plugins/power/ < "{{ .chezmoi.sourceDir }}/gnome/dconf/power.ini"
+{{ end -}}
 {{ end -}}

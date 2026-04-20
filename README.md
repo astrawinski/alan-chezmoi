@@ -131,8 +131,11 @@ Bounded GNOME state lives under:
 - `gnome/dconf/shell.ini`
 - `gnome/dconf/power.ini`
 
-It is applied only when the machine is running a GNOME session with a usable
-session bus.
+It is applied only when:
+
+- the current host overlay declares `desktop_family: gnome`
+- the machine is running a GNOME session
+- a usable session bus is present
 
 ## Repo Shape
 
