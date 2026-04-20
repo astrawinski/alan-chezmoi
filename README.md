@@ -59,6 +59,7 @@ This repo currently expects these LastPass entries:
   - used for:
     - `~/.ssh/id_ed25519`
     - `~/.ssh/id_ed25519.pub`
+    - `~/.ssh/config`
 
 - `WSUB/SOPS Age Key`
   - note fields:
@@ -122,7 +123,6 @@ dot_bashrc
 dot_bash_aliases
 dot_profile
 dot_gitconfig
-dot_ssh/config
 dot_config/
   Code/User/settings.json
   mimeapps.list
