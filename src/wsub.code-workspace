@@ -7,9 +7,6 @@
 			"path": "cavekit"
 		},
 		{
-			"path": "alan-chezmoi"
-		},
-		{
 			"path": "terraform-provider-unifi"
 		}
 	],
