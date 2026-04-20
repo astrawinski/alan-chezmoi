@@ -1,0 +1,10 @@
+vscode:
+  extensions:
+    - github.copilot-chat
+    - github.vscode-pull-request-github
+    - golang.go
+    - mads-hartmann.bash-ide-vscode
+    - ms-azuretools.vscode-containers
+    - openai.chatgpt
+    - tamasfe.even-better-toml
+    - tomoki1207.pdf

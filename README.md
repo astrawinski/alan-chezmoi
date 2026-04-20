@@ -72,11 +72,13 @@ This repo currently expects these LastPass entries:
 Package installation is driven by:
 
 - `.chezmoidata/packages.yaml`
+- `.chezmoidata/vscode.yaml`
 - `run_once_before_10-install-lastpass-cli.sh.tmpl`
 - `run_onchange_after_20-install-packages.sh.tmpl`
+- `run_onchange_after_25-install-vscode-extensions.sh.tmpl`
 
-That follows the standard `chezmoi` pattern of declarative package data plus
-imperative install scripts.
+That follows the standard `chezmoi` pattern of declarative package and editor
+data plus imperative install scripts.
 
 Linux package data is split into:
 
@@ -162,6 +164,7 @@ dot_config/
   wsub/gh/config.yml
 run_once_before_10-install-lastpass-cli.sh.tmpl
 run_onchange_after_20-install-packages.sh.tmpl
+run_onchange_after_25-install-vscode-extensions.sh.tmpl
 run_onchange_after_30-load-gnome-dconf.sh.tmpl
 run_after_40-render-lastpass-secrets.sh.tmpl
 gnome/dconf/

@@ -1,0 +1,23 @@
+{{- if eq .chezmoi.os "linux" -}}
+{{- $extensions := .vscode.extensions | default (list) -}}
+{{- if $extensions -}}
+#!/bin/sh
+set -eu
+
+if ! command -v code >/dev/null 2>&1; then
+  exit 0
+fi
+
+for extension in \
+{{- range $extensions }}
+  {{ . }} \
+{{- end }}
+; do
+  if code --list-extensions | grep -Fxq "$extension"; then
+    continue
+  fi
+
+  code --install-extension "$extension"
+done
+{{ end -}}
+{{ end -}}
