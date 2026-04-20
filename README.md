@@ -133,6 +133,18 @@ The install hook merges:
 That keeps host blocks small and avoids duplicating shared package intent
 across multiple machines.
 
+Third-party GUI packages are split deliberately:
+
+- `brave-browser`, `code`, and `signal-desktop`
+  - installed through apt after `chezmoi` configures their upstream apt sources
+- `discord`
+  - installed from the vendor `.deb` download instead of pretending it is part
+    of the normal Debian apt surface
+
+`chezmoi` itself is not part of the apt package model here. It is expected to
+arrive through the bootstrap path first, and the package-install phase then
+converges the rest of the workstation package set.
+
 The LastPass CLI package is built locally on Linux with:
 
 - upstream `lastpass-cli`
