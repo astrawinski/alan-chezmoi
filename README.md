@@ -80,8 +80,8 @@ imperative install scripts.
 
 Linux package data is split into:
 
-- `apt_cli_common`
-  - non-desktop-specific command-line packages shared across machines
+- `apt_core_common`
+  - core command-line packages shared across machines
 - `apt_gui_common`
   - desktop-neutral GUI packages shared across machines
 - `role_packages`
@@ -99,7 +99,7 @@ Hosts should only describe what is unique to that host, for example:
 
 The install hook merges:
 
-- CLI-common packages
+- core CLI packages
 - GUI-common packages
 - role packages for the current host
 - desktop-family packages for `{{ .chezmoi.hostname }}`

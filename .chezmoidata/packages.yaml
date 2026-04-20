@@ -1,27 +1,14 @@
 packages:
   linux:
-    apt_cli_common:
-      - age
+    apt_core_common:
       - bash-completion
       - chezmoi
       - curl
-      - fd-find
       - git
-      - gh
-      - golang-go
-      - jq
-      - lastpass-cli
       - neovim
-      - nodejs
-      - npm
-      - pandoc
       - ripgrep
-      - shellcheck
-      - sops
-      - syncthing
       - tmux
       - xclip
-      - sshpass
     apt_gui_common:
       - brave-browser
       - code
@@ -30,6 +17,22 @@ packages:
       - remmina
       - signal-desktop
     role_packages:
+      bootstrap_auth:
+        - age
+        - gh
+        - jq
+        - lastpass-cli
+        - sops
+        - sshpass
+      dev_cli:
+        - fd-find
+        - golang-go
+        - nodejs
+        - npm
+        - pandoc
+        - shellcheck
+      live_sync:
+        - syncthing
       management_tooling:
         - ansible-lint
         - tcpdump
@@ -55,6 +58,9 @@ packages:
       wsub-laptop01:
         desktop_family: gnome
         roles:
+          - bootstrap_auth
+          - dev_cli
+          - live_sync
           - management_tooling
           - virtualization
           - virtualization_gui
