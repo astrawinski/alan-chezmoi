@@ -4,10 +4,13 @@
 			"path": "wsub"
 		},
 		{
-			"path": "cavekit"
+			"path": "terraform-provider-unifi"
 		},
 		{
-			"path": "terraform-provider-unifi"
+			"path": "cavekit-codex"
+		},
+		{
+			"path": "../.local/share/chezmoi"
 		}
 	],
 	"settings": {}
