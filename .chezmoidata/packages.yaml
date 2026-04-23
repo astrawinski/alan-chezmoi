@@ -82,6 +82,9 @@ packages:
           - workstation_utilities
           - sync_clients
         apt_extra: []
+    host_aliases:
+      wsub-mbp01-wired: wsub-mbp01
+      wsub-mbp01-wireless: wsub-mbp01
     lastpass_build_deps:
       - cmake
       - ca-certificates

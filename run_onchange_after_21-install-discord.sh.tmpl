@@ -1,6 +1,7 @@
 {{- if eq .chezmoi.os "linux" -}}
 {{- $linux := .packages.linux -}}
-{{- $host := get $linux.hosts .chezmoi.hostname | default dict -}}
+{{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
+{{- $host := get $linux.hosts $canonicalHostname | default dict -}}
 {{- $desktopFamily := get $host "desktop_family" | default "none" -}}
 {{- $desktopPackages := get $linux.desktop_packages $desktopFamily | default (list) -}}
 {{- $externalDebCommon := get $linux "external_deb_common" | default (list) -}}
