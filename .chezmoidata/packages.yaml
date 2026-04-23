@@ -38,6 +38,7 @@ packages:
         - syncthing
       management_tooling:
         - ansible-lint
+        - imagemagick
         - tcpdump
         - terraform
         - yamllint
