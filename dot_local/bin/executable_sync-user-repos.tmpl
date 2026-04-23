@@ -10,6 +10,19 @@ fi
 checkout_root="${HOME}/{{ .repos.checkout_root }}"
 mkdir -p "${checkout_root}"
 
+github_https_fallback() {
+  origin="$1"
+  case "${origin}" in
+    git@github.com:*.git)
+      repo_path="${origin#git@github.com:}"
+      printf 'https://github.com/%s\n' "${repo_path}"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 sync_repo() {
   name="$1"
   origin="$2"
@@ -30,8 +43,19 @@ sync_repo() {
 
     printf '[chezmoi] Cloning %s into %s\n' "${name}" "${repo_dir}"
     if ! git clone "${origin}" "${repo_dir}"; then
-      printf '[chezmoi] Failed to clone %s from %s.\n' "${name}" "${origin}" >&2
-      return 1
+      fallback_origin="$(github_https_fallback "${origin}" || true)"
+      if [ -z "${fallback_origin}" ]; then
+        printf '[chezmoi] Failed to clone %s from %s.\n' "${name}" "${origin}" >&2
+        return 1
+      fi
+
+      printf '[chezmoi] SSH clone for %s failed; retrying bootstrap clone over %s.\n' "${name}" "${fallback_origin}" >&2
+      if ! git clone "${fallback_origin}" "${repo_dir}"; then
+        printf '[chezmoi] Failed to clone %s from %s and %s.\n' "${name}" "${origin}" "${fallback_origin}" >&2
+        return 1
+      fi
+
+      git -C "${repo_dir}" remote set-url origin "${origin}"
     fi
   fi
 

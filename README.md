@@ -7,8 +7,10 @@ It is intended to support the normal new-machine flow:
 1. install `chezmoi`
 2. run `chezmoi init --apply <repo>`
 3. let the first apply install `lpass`
-4. run `lpass login`
-5. run `refresh-workstation-secrets`
+4. if you rebuilt a known host, refresh its SSH host key:
+   `ssh-refresh-host <host>`
+5. run `lpass login`
+6. run `refresh-workstation-secrets`
 
 The repo is designed to be public-safe:
 
@@ -28,6 +30,7 @@ chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 Then:
 
 ```bash
+ssh-refresh-host <host>
 lpass login
 refresh-workstation-secrets
 ```
@@ -37,6 +40,12 @@ is intentionally deferred until `lpass login` succeeds and the explicit
 refresh helper runs. Managed `~/src` repo checkouts are also retried from that
 same secret-refresh step, after the GitHub SSH key and SSH config have been
 restored.
+
+For public GitHub repos, the first apply now falls back to an unauthenticated
+HTTPS bootstrap clone when SSH clone fails on a fresh machine, then resets the
+configured `origin` back to the intended SSH URL. That keeps first-run repo
+sync from depending on the GitHub SSH key while preserving the normal SSH
+remote shape after clone.
 
 ## LastPass Items
 
@@ -119,6 +128,16 @@ It runs during `chezmoi apply` on a best-effort basis and is retried
 automatically after `refresh-workstation-secrets`, when the GitHub SSH key has
 been refreshed. Existing unexpected directories or repos with the wrong origin
 are warned about and left alone instead of being rewritten.
+
+The SSH host-key refresh surface is:
+
+- `~/.local/bin/ssh-refresh-host`
+
+Use it after reinstalling a known machine whose SSH host key has changed:
+
+```bash
+ssh-refresh-host wsub-mbp01
+```
 
 Normal operator flow should not need `sync-user-repos` directly. Treat it as a
 repair command if a managed checkout is missing or the automatic retry could
