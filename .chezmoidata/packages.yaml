@@ -38,10 +38,11 @@ packages:
         - syncthing
       management_tooling:
         - ansible-lint
-        - imagemagick
         - tcpdump
         - terraform
         - yamllint
+      workstation_utilities:
+        - imagemagick
       virtualization:
         - libvirt-clients
         - libvirt-daemon-system
@@ -66,6 +67,7 @@ packages:
           - dev_cli
           - live_sync
           - management_tooling
+          - workstation_utilities
           - virtualization
           - virtualization_gui
           - sync_clients
@@ -77,6 +79,7 @@ packages:
           - dev_cli
           - live_sync
           - management_tooling
+          - workstation_utilities
           - sync_clients
         apt_extra: []
     lastpass_build_deps:
