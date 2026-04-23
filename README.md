@@ -45,7 +45,9 @@ For public GitHub repos, the first apply now falls back to an unauthenticated
 HTTPS bootstrap clone when SSH clone fails on a fresh machine, then resets the
 configured `origin` back to the intended SSH URL. That keeps first-run repo
 sync from depending on the GitHub SSH key while preserving the normal SSH
-remote shape after clone.
+remote shape after clone. The public bootstrap also seeds `github.com` into
+`~/.ssh/known_hosts` before repo sync so first-run SSH clone attempts do not
+stop on a host-trust prompt.
 
 ## LastPass Items
 

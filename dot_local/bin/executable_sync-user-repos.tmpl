@@ -10,6 +10,27 @@ fi
 checkout_root="${HOME}/{{ .repos.checkout_root }}"
 mkdir -p "${checkout_root}"
 
+ensure_github_known_hosts() {
+  known_hosts_file="${HOME}/.ssh/known_hosts"
+  mkdir -p "${HOME}/.ssh"
+  touch "${known_hosts_file}"
+
+  if ssh-keygen -F github.com -f "${known_hosts_file}" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if ! command -v ssh-keyscan >/dev/null 2>&1; then
+    printf '[chezmoi] ssh-keyscan is not installed yet; skipping github.com known_hosts bootstrap.\n' >&2
+    return 0
+  fi
+
+  if ssh-keyscan -H github.com >> "${known_hosts_file}" 2>/dev/null; then
+    printf '[chezmoi] Seeded github.com host key into %s.\n' "${known_hosts_file}" >&2
+  else
+    printf '[chezmoi] Failed to preseed github.com host key; continuing.\n' >&2
+  fi
+}
+
 github_https_fallback() {
   origin="$1"
   case "${origin}" in
@@ -33,6 +54,8 @@ bootstrap_https_clone() {
       -c credential.interactive=never \
       clone "${origin}" "${repo_dir}"
 }
+
+ensure_github_known_hosts
 
 sync_repo() {
   name="$1"
