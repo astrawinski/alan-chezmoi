@@ -1,15 +1,30 @@
 {{- if eq .chezmoi.os "linux" -}}
 {{- $linux := .packages.linux -}}
+{{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
+{{- $host := get $linux.hosts $canonicalHostname | default dict -}}
 {{- $aptGuiCommon := $linux.apt_gui_common | default (list) -}}
+{{- $rolePackages := $linux.role_packages | default dict -}}
+{{- $roles := get $host "roles" | default (list) -}}
+{{- $aptExtra := get $host "apt_extra" | default (list) -}}
 {{- $needsBrave := false -}}
 {{- $needsCode := false -}}
 {{- $needsSignal := false -}}
+{{- $needsTerraform := false -}}
 {{- range $aptGuiCommon }}
 {{- if eq . "brave-browser" }}{{- $needsBrave = true -}}{{- end -}}
 {{- if eq . "code" }}{{- $needsCode = true -}}{{- end -}}
 {{- if eq . "signal-desktop" }}{{- $needsSignal = true -}}{{- end -}}
 {{- end -}}
-{{- if or $needsBrave $needsCode $needsSignal -}}
+{{- range $roles }}
+{{- $roleName := . -}}
+{{- range (get $rolePackages $roleName | default (list)) }}
+{{- if eq . "terraform" }}{{- $needsTerraform = true -}}{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- range $aptExtra }}
+{{- if eq . "terraform" }}{{- $needsTerraform = true -}}{{- end -}}
+{{- end -}}
+{{- if or $needsBrave $needsCode $needsSignal $needsTerraform -}}
 #!/bin/sh
 set -eu
 
@@ -45,6 +60,19 @@ sudo install -D -o root -g root -m 644 signal-desktop-keyring.gpg /usr/share/key
 rm -f signal-desktop-keyring.gpg
 wget -qO "${tmpdir}/signal-desktop.sources" https://updates.signal.org/static/desktop/apt/signal-desktop.sources
 sudo install -D -o root -g root -m 644 "${tmpdir}/signal-desktop.sources" /etc/apt/sources.list.d/signal-desktop.sources
+{{ end -}}
+{{- if $needsTerraform }}
+wget -qO- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > "${tmpdir}/hashicorp.gpg"
+sudo install -D -o root -g root -m 644 "${tmpdir}/hashicorp.gpg" /usr/share/keyrings/hashicorp-archive-keyring.gpg
+. /etc/os-release
+cat <<EOF | sudo tee /etc/apt/sources.list.d/hashicorp.sources >/dev/null
+Types: deb
+URIs: https://apt.releases.hashicorp.com
+Suites: ${VERSION_CODENAME}
+Components: main
+Architectures: $(dpkg --print-architecture)
+Signed-By: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+EOF
 {{ end -}}
 {{ end -}}
 {{ end -}}

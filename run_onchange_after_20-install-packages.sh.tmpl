@@ -9,30 +9,36 @@
 {{- $rolePackages := $linux.role_packages | default dict -}}
 {{- $roles := get $host "roles" | default (list) -}}
 {{- $aptExtra := get $host "apt_extra" | default (list) -}}
+{{- $externalBinaries := $linux.external_binaries | default dict -}}
 {{- if or $aptCoreCommon $aptGuiCommon $desktopPackages $roles $aptExtra -}}
 #!/bin/sh
 set -eu
 
 sudo apt-get update
-sudo apt-get install -y \
+cat <<'EOF' | xargs sudo apt-get install -y
 {{- range $aptCoreCommon }}
-  {{ . }} \
+{{ . }}
 {{- end }}
 {{- range $aptGuiCommon }}
-  {{ . }} \
+{{ . }}
 {{- end }}
 {{- range $desktopPackages }}
-  {{ . }} \
+{{ . }}
 {{- end }}
 {{- range $roles }}
 {{- $roleName := . -}}
 {{- range (get $rolePackages $roleName | default (list)) }}
-  {{ . }} \
+{{- if not (hasKey $externalBinaries .) }}
+{{ . }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- range $aptExtra }}
-  {{ . }} \
+{{- if not (hasKey $externalBinaries .) }}
+{{ . }}
 {{- end }}
+{{- end }}
+EOF
 
 {{ end -}}
 {{ end -}}

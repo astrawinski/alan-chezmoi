@@ -85,6 +85,12 @@ packages:
     host_aliases:
       wsub-mbp01-wired: wsub-mbp01
       wsub-mbp01-wireless: wsub-mbp01
+    external_binaries:
+      sops:
+        version: "3.12.2"
+        url:
+          amd64: "https://github.com/getsops/sops/releases/download/v3.12.2/sops-v3.12.2.linux.amd64"
+          arm64: "https://github.com/getsops/sops/releases/download/v3.12.2/sops-v3.12.2.linux.arm64"
     lastpass_build_deps:
       - cmake
       - ca-certificates

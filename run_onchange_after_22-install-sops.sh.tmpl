@@ -1,0 +1,55 @@
+{{- if eq .chezmoi.os "linux" -}}
+{{- $linux := .packages.linux -}}
+{{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
+{{- $host := get $linux.hosts $canonicalHostname | default dict -}}
+{{- $rolePackages := $linux.role_packages | default dict -}}
+{{- $roles := get $host "roles" | default (list) -}}
+{{- $aptExtra := get $host "apt_extra" | default (list) -}}
+{{- $externalBinaries := $linux.external_binaries | default dict -}}
+{{- $sops := get $externalBinaries "sops" | default dict -}}
+{{- $sopsVersion := get $sops "version" | default "" -}}
+{{- $needsSops := false -}}
+{{- range $roles }}
+{{- $roleName := . -}}
+{{- range (get $rolePackages $roleName | default (list)) }}
+{{- if eq . "sops" }}{{- $needsSops = true -}}{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- range $aptExtra }}
+{{- if eq . "sops" }}{{- $needsSops = true -}}{{- end -}}
+{{- end -}}
+{{- if and $needsSops $sopsVersion -}}
+#!/bin/sh
+set -eu
+
+arch="$(dpkg --print-architecture)"
+case "${arch}" in
+  amd64|arm64)
+    ;;
+  *)
+    echo "unsupported architecture for sops bootstrap: ${arch}" >&2
+    exit 1
+    ;;
+esac
+
+current_version=""
+if command -v sops >/dev/null 2>&1; then
+  current_version="$(sops --version 2>/dev/null | sed -n 's/^sops \\([0-9][^ ]*\\).*/\\1/p' | head -n1)"
+fi
+
+if [ "${current_version}" = "{{ $sopsVersion }}" ]; then
+  exit 0
+fi
+
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "${tmpdir}"' EXIT
+
+curl -fsSL "{{ get ($sops.url | default dict) "amd64" }}" -o "${tmpdir}/sops"
+if [ "${arch}" = "arm64" ]; then
+  curl -fsSL "{{ get ($sops.url | default dict) "arm64" }}" -o "${tmpdir}/sops"
+fi
+
+chmod 755 "${tmpdir}/sops"
+sudo install -D -o root -g root -m 755 "${tmpdir}/sops" /usr/local/bin/sops
+{{- end -}}
+{{- end -}}
