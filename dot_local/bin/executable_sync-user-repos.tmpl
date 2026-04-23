@@ -23,6 +23,17 @@ github_https_fallback() {
   esac
 }
 
+bootstrap_https_clone() {
+  origin="$1"
+  repo_dir="$2"
+  GIT_TERMINAL_PROMPT=0 \
+    git \
+      -c credential.helper= \
+      -c core.askPass= \
+      -c credential.interactive=never \
+      clone "${origin}" "${repo_dir}"
+}
+
 sync_repo() {
   name="$1"
   origin="$2"
@@ -50,7 +61,7 @@ sync_repo() {
       fi
 
       printf '[chezmoi] SSH clone for %s failed; retrying bootstrap clone over %s.\n' "${name}" "${fallback_origin}" >&2
-      if ! git clone "${fallback_origin}" "${repo_dir}"; then
+      if ! bootstrap_https_clone "${fallback_origin}" "${repo_dir}"; then
         printf '[chezmoi] Failed to clone %s from %s and %s.\n' "${name}" "${origin}" "${fallback_origin}" >&2
         return 1
       fi
