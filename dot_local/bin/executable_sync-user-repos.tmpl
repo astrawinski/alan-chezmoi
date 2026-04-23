@@ -66,8 +66,14 @@ sync_repo() {
   if [ -d "${repo_dir}/.git" ]; then
     current_origin="$(git -C "${repo_dir}" remote get-url origin 2>/dev/null || true)"
     if [ "${current_origin}" != "${origin}" ]; then
-      printf '[chezmoi] Repo %s exists with unexpected origin %s; expected %s. Leaving it alone.\n' "${name}" "${current_origin:-<missing>}" "${origin}" >&2
-      return 0
+      fallback_origin="$(github_https_fallback "${origin}" || true)"
+      if [ -n "${fallback_origin}" ] && [ "${current_origin}" = "${fallback_origin}" ]; then
+        printf '[chezmoi] Repo %s still has bootstrap origin %s; restoring steady-state SSH origin %s.\n' "${name}" "${current_origin}" "${origin}" >&2
+        git -C "${repo_dir}" remote set-url origin "${origin}"
+      else
+        printf '[chezmoi] Repo %s exists with unexpected origin %s; expected %s. Leaving it alone.\n' "${name}" "${current_origin:-<missing>}" "${origin}" >&2
+        return 0
+      fi
     fi
   else
     if [ -e "${repo_dir}" ]; then
