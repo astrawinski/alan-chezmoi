@@ -4,9 +4,9 @@ repos:
     - name: wsub
       origin: git@github.com:astrawinski/wsub.git
       upstream: ""
-    - name: cavekit
-      origin: git@github.com:astrawinski/cavekit.git
-      upstream: git@github.com:JuliusBrussee/cavekit.git
+    - name: cavekit-codex
+      origin: git@github.com:astrawinski/cavekit-codex.git
+      upstream: ""
     - name: terraform-provider-unifi
       origin: git@github.com:astrawinski/terraform-provider-unifi.git
       upstream: ""

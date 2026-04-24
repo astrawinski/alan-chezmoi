@@ -171,6 +171,7 @@ The first apply installs the baseline user environment:
 - packages
 - VS Code extensions
 - global npm tools
+- `cavekit-codex` checkout plus Codex skill install via `skills add`
 - user-level `ssh-agent.socket`
 - helper scripts
 - repo sync scaffolding
@@ -231,6 +232,7 @@ Package and editor installation is driven by:
 - `run_onchange_after_26-install-npm-global-tools.sh.tmpl`
 - `run_onchange_after_27-enable-ssh-agent.sh.tmpl`
 - `run_onchange_after_28-sync-user-repos.sh.tmpl`
+- `run_after_29-install-cavekit-codex.sh.tmpl`
 - `run_onchange_after_30-load-gnome-dconf.sh.tmpl`
 
 The Linux package model is split into:
@@ -264,7 +266,7 @@ Tracked repo checkouts live under:
 On Linux this repo converges:
 
 - `~/src/wsub`
-- `~/src/cavekit`
+- `~/src/cavekit-codex`
 - `~/src/terraform-provider-unifi`
 
 `alan-chezmoi` itself is intentionally excluded from that list when using

@@ -1,0 +1,19 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -eu
+
+repo_dir="${HOME}/{{ .repos.checkout_root }}/cavekit-codex"
+
+if [ ! -d "${repo_dir}/skills" ]; then
+  printf '[chezmoi] cavekit-codex skills surface is not present yet; skipping Codex Cavekit install.\n' >&2
+  exit 0
+fi
+
+if ! command -v npx >/dev/null 2>&1; then
+  printf '[chezmoi] npx is not installed yet; skipping Codex Cavekit install.\n' >&2
+  exit 0
+fi
+
+printf '[chezmoi] Installing cavekit-codex skills into Codex from %s\n' "${repo_dir}" >&2
+npx skills add "${repo_dir}" -g -a codex -y --skill '*'
+{{ end -}}
