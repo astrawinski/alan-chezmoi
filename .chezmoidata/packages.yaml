@@ -83,7 +83,13 @@ packages:
           - management_tooling
           - workstation_utilities
           - sync_clients
-        apt_extra: []
+        apt_source_components_extra:
+          - contrib
+        apt_extra:
+          - firmware-b43-installer
+          - iw
+          - network-manager
+          - rfkill
     host_aliases:
       wsub-mbp01-wired: wsub-mbp01
       wsub-mbp01-wireless: wsub-mbp01

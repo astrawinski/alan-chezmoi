@@ -169,6 +169,7 @@ This repo currently expects these LastPass entries under `WSUB/`:
 The first apply installs the baseline user environment:
 
 - packages
+- host-specific package floor such as `wsub-mbp01` Broadcom Wi-Fi support
 - VS Code extensions
 - global npm tools
 - `cavekit-codex` checkout plus Codex skill install via `skills add`
@@ -323,6 +324,21 @@ To preview another host overlay from the current machine:
 
 That swaps only the modeled overlay. It does not prove what is actually
 installed on the other machine.
+
+For `wsub-mbp01`, the modeled package floor also includes:
+
+- `network-manager`
+- `iw`
+- `rfkill`
+- `firmware-b43-installer`
+
+and `chezmoi update` will install a repo-derived `snet-client` NetworkManager
+profile once:
+
+- `~/src/wsub` is present locally
+- `sops` is available
+- the local `age` key has been restored, so the checked-in host secret can be
+  decrypted
 
 ## GNOME State
 

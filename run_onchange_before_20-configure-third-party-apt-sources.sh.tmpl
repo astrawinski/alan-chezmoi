@@ -6,6 +6,7 @@
 {{- $rolePackages := $linux.role_packages | default dict -}}
 {{- $roles := get $host "roles" | default (list) -}}
 {{- $aptExtra := get $host "apt_extra" | default (list) -}}
+{{- $aptSourceComponentsExtra := get $host "apt_source_components_extra" | default (list) -}}
 {{- $needsBrave := false -}}
 {{- $needsCode := false -}}
 {{- $needsSignal := false -}}
@@ -24,9 +25,33 @@
 {{- range $aptExtra }}
 {{- if eq . "terraform" }}{{- $needsTerraform = true -}}{{- end -}}
 {{- end -}}
-{{- if or $needsBrave $needsCode $needsSignal $needsTerraform -}}
+{{- if or $needsBrave $needsCode $needsSignal $needsTerraform $aptSourceComponentsExtra -}}
 #!/bin/sh
 set -eu
+
+{{- if $aptSourceComponentsExtra }}
+sudo python3 - <<'PY'
+from pathlib import Path
+
+sources = Path("/etc/apt/sources.list")
+if sources.exists():
+    extras = {{ toJson $aptSourceComponentsExtra }}
+    rewritten = []
+    for raw_line in sources.read_text().splitlines():
+        line = raw_line.rstrip("\n")
+        stripped = line.strip()
+        if stripped.startswith("deb ") or stripped.startswith("deb-src "):
+            parts = line.split()
+            if len(parts) >= 4 and parts[1].startswith("http://deb.debian.org/debian"):
+                components = parts[3:]
+                for extra in extras:
+                    if extra not in components:
+                        components.append(extra)
+                line = " ".join(parts[:3] + components)
+        rewritten.append(line)
+    sources.write_text("\n".join(rewritten) + "\n")
+PY
+{{ end -}}
 
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gpg wget apt-transport-https
