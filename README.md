@@ -325,15 +325,15 @@ To preview another host overlay from the current machine:
 That swaps only the modeled overlay. It does not prove what is actually
 installed on the other machine.
 
-For `wsub-mbp01`, the modeled package floor also includes:
+For `wsub-mbp01`, the modeled post-login package delta now keeps only the
+operator/debug wireless tools:
 
-- `network-manager`
 - `iw`
 - `rfkill`
-- `firmware-b43-installer`
 
-and `chezmoi update` will install a repo-derived `snet-client` NetworkManager
-profile once:
+The base GNOME workstation and install-time networking floor now come from the
+WSUB installer profile. After first login, `chezmoi update` still installs a
+repo-derived `snet-client` NetworkManager profile once:
 
 - `~/src/wsub` is present locally
 - `sops` is available

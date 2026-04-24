@@ -75,7 +75,7 @@ packages:
           - sync_clients
         apt_extra: []
       wsub-mbp01:
-        desktop_family: none
+        desktop_family: gnome
         roles:
           - bootstrap_auth
           - dev_cli
@@ -83,12 +83,8 @@ packages:
           - management_tooling
           - workstation_utilities
           - sync_clients
-        apt_source_components_extra:
-          - contrib
         apt_extra:
-          - firmware-b43-installer
           - iw
-          - network-manager
           - rfkill
     host_aliases:
       wsub-mbp01-wired: wsub-mbp01
