@@ -8,6 +8,9 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 0
 fi
 
+export NPM_CONFIG_PREFIX="${HOME}/.local/npm"
+mkdir -p "${NPM_CONFIG_PREFIX}/bin"
+
 for package_name in \
 {{- range $packages }}
   {{ .name | quote }} \
@@ -17,7 +20,7 @@ for package_name in \
     continue
   fi
 
-  sudo npm -g install "${package_name}"
+  npm -g install "${package_name}"
 done
 {{ end -}}
 {{ end -}}

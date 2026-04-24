@@ -8,6 +8,14 @@ case ":$PATH:" in
     ;;
 esac
 
+case ":$PATH:" in
+  *:"$HOME/.local/npm/bin":*)
+    ;;
+  *)
+    export PATH="$HOME/.local/npm/bin:$PATH"
+    ;;
+esac
+
 for standard_sbin_path in /usr/local/sbin /usr/sbin /sbin; do
   if [ -d "$standard_sbin_path" ]; then
     case ":$PATH:" in
@@ -39,6 +47,7 @@ export SRC_REPO_ROOT="${SRC_REPO_ROOT:-$HOME/src}"
 export WSUB_REPO="${WSUB_REPO:-$SRC_REPO_ROOT/wsub}"
 export CAVEKIT_REPO="${CAVEKIT_REPO:-$SRC_REPO_ROOT/cavekit}"
 export TERRAFORM_PROVIDER_UNIFI_REPO="${TERRAFORM_PROVIDER_UNIFI_REPO:-$SRC_REPO_ROOT/terraform-provider-unifi}"
+export NPM_CONFIG_PREFIX="${HOME}/.local/npm"
 export GH_CONFIG_DIR="$HOME/.config/wsub/gh"
 export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/openssh_agent"
 export LPASS_AGENT_TIMEOUT=0
