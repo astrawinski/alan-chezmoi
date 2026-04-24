@@ -257,7 +257,8 @@ Global npm tools live under:
 
 - `packages.linux.npm_global_tools`
 
-That keeps non-apt CLI tools like `codex` out of the Debian package model.
+That keeps non-apt CLI tools like `codex` and `skills` out of the Debian
+package model.
 
 Tracked repo checkouts live under:
 

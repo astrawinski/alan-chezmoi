@@ -16,11 +16,11 @@ if [ ! -d "${repo_dir}/skills" ]; then
   exit 0
 fi
 
-if ! command -v npx >/dev/null 2>&1; then
-  printf '[chezmoi] npx is not installed yet; skipping Codex Cavekit install.\n' >&2
+if ! command -v skills >/dev/null 2>&1; then
+  printf '[chezmoi] skills CLI is not installed yet; skipping Codex Cavekit install.\n' >&2
   exit 0
 fi
 
 printf '[chezmoi] Installing cavekit-codex skills into Codex from %s\n' "${repo_dir}" >&2
-npx skills add "${repo_dir}" -g -a codex -y --skill '*'
+skills add "${repo_dir}" -g -a codex -y --skill '*'
 {{ end -}}

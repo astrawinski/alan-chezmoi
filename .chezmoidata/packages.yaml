@@ -3,6 +3,8 @@ packages:
     npm_global_tools:
       - name: "@openai/codex"
         version: "0.120.0"
+      - name: "skills"
+        version: "1.5.1"
     apt_core_common:
       - bash-completion
       - curl
