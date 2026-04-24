@@ -65,6 +65,13 @@ This repo currently expects these LastPass entries:
     - `~/.api_keys`
   - optional; only needed if you actually use shared env-style API keys
 
+- `WSUB/secret-codex-auth`
+  - raw `~/.codex/auth.json` content stored in the note body
+  - used for:
+    - `~/.codex/auth.json`
+  - optional; only needed if you want Codex auth restored onto fresh machines
+    through the LastPass-backed secret-refresh path
+
 - `WSUB/secret-onedrive-refresh-token`
   - `password`
   - used for:
