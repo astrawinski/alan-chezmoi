@@ -171,6 +171,7 @@ The first apply installs the baseline user environment:
 - packages
 - VS Code extensions
 - global npm tools
+- Codex skill bundles
 - user-level `ssh-agent.socket`
 - helper scripts
 - repo sync scaffolding
@@ -214,6 +215,18 @@ Important day-to-day helpers:
 - `sync-user-repos`
   - repairs managed `~/src` checkouts if needed
   - normal operator flow should not need this directly
+
+## Codex Integration
+
+This repo also manages the user-owned Codex skill surface that should exist on
+every workstation after a normal apply.
+
+Today that includes:
+
+- `~/.codex/skills/cavekit-codex`
+
+That skill bundle is checked in directly here so rebuilt machines get Cavekit's
+Codex-side commands without depending on a separate local generator checkout.
 
 ## Packages, Editors, and Repo Sync
 
