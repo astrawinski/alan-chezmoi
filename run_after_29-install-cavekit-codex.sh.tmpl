@@ -16,11 +16,17 @@ if [ ! -d "${repo_dir}/skills" ]; then
   exit 0
 fi
 
-if ! command -v skills >/dev/null 2>&1; then
+skills_bin="${HOME}/.local/npm/bin/skills"
+
+if [ ! -x "${skills_bin}" ] && ! command -v skills >/dev/null 2>&1; then
   printf '[chezmoi] skills CLI is not installed yet; skipping Codex Cavekit install.\n' >&2
   exit 0
 fi
 
+if [ ! -x "${skills_bin}" ]; then
+  skills_bin="$(command -v skills)"
+fi
+
 printf '[chezmoi] Installing cavekit-codex skills into Codex from %s\n' "${repo_dir}" >&2
-skills add "${repo_dir}" -g -a codex -y --skill '*'
+"${skills_bin}" add "${repo_dir}" -g -a codex -y --skill '*'
 {{ end -}}
