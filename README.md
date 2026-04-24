@@ -39,6 +39,51 @@ That gives you the normal two-stage model:
 The first apply is expected to work before LastPass login. Secret rendering is
 intentionally deferred until the explicit refresh step.
 
+## WSUB Laptop Rebuild Flow
+
+For WSUB-managed management workstations, this repo is only the later
+user-environment half of the rebuild path.
+
+The full flow is:
+
+1. from a trusted management workstation with a `wsub` checkout, rebuild the
+   installer media
+2. boot the target laptop from that media and complete the Debian install
+3. SSH into the fresh machine and run `workstation-bootstrap`
+4. let `workstation-bootstrap` install `chezmoi` and run the first apply from
+   this repo
+5. log into LastPass
+6. run `refresh-workstation-secrets`
+7. rerun `chezmoi update` if the post-secret handoff tells you to
+
+In practical terms, the operator flow after the Debian install looks like:
+
+```bash
+ssh-refresh-host <host>   # only if this is a rebuilt known machine
+ssh <host>
+workstation-bootstrap
+lpass login
+refresh-workstation-secrets
+chezmoi update
+```
+
+What WSUB owns:
+
+- installer media
+- machine identity and hostname correction
+- `workstation-bootstrap`
+- the handoff into this repo
+
+What this repo owns:
+
+- user packages
+- shell/editor state
+- roaming secret restore
+- managed `~/src` checkouts
+
+This split is intentional. WSUB gets the machine to a usable user-owned
+handoff point; `alan-chezmoi` takes over from there.
+
 ## Secret Model
 
 Secret flow is deliberately one-way by default:
