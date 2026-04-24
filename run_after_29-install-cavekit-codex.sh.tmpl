@@ -5,7 +5,14 @@ set -eu
 repo_dir="${HOME}/{{ .repos.checkout_root }}/cavekit-codex"
 
 if [ ! -d "${repo_dir}/skills" ]; then
-  printf '[chezmoi] cavekit-codex skills surface is not present yet; skipping Codex Cavekit install.\n' >&2
+  if [ -x "${HOME}/.local/bin/sync-user-repos" ]; then
+    printf '[chezmoi] cavekit-codex checkout is not present yet; syncing managed repos first.\n' >&2
+    "${HOME}/.local/bin/sync-user-repos" || true
+  fi
+fi
+
+if [ ! -d "${repo_dir}/skills" ]; then
+  printf '[chezmoi] cavekit-codex skills surface is not present yet after repo sync; skipping Codex Cavekit install.\n' >&2
   exit 0
 fi
 
