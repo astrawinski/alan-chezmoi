@@ -35,6 +35,15 @@ lpass login
 refresh-workstation-secrets
 ```
 
+When a rotatable local secret changes on one machine and you want to publish the
+new value back into LastPass for later restore on other machines:
+
+```bash
+update-workstation-secrets codex
+update-workstation-secrets onedrive
+update-workstation-secrets api-keys
+```
+
 The first apply is expected to succeed before LastPass login. Secret rendering
 is intentionally deferred until `lpass login` succeeds and the explicit
 refresh helper runs. Managed `~/src` repo checkouts are also retried from that
@@ -147,6 +156,21 @@ Use it after reinstalling a known machine whose SSH host key has changed:
 ```bash
 ssh-refresh-host wsub-mbp01
 ```
+
+The secret-update surface is:
+
+- `~/.local/bin/update-workstation-secrets`
+
+It pushes selected local secret state back into LastPass so later
+`refresh-workstation-secrets` runs on other machines can pull the updated
+value down. The first version intentionally supports only:
+
+- `codex`
+- `onedrive`
+- `api-keys`
+- `all`
+
+It does not currently rewrite GitHub PAT, SSH keys, or `age` keys.
 
 Normal operator flow should not need `sync-user-repos` directly. Treat it as a
 repair command if a managed checkout is missing or the automatic retry could
