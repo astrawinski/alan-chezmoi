@@ -11,3 +11,15 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias lpass-login='lpass login astrawinski@gmail.com'
 alias srh='ssh-refresh-host'
 alias uws='update-workstation-secrets'
+
+brave-browser() {
+  command brave-browser --disable-gpu-compositing "$@"
+}
+
+brave-browser-stable() {
+  command brave-browser-stable --disable-gpu-compositing "$@"
+}
+
+code() {
+  command code --disable-gpu-compositing "$@"
+}
