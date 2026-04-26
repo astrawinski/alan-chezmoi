@@ -31,7 +31,7 @@ This source currently manages:
 - `~/.gitconfig`
 - `~/README.md`
 
-It also enables `sshd.service`.
+It also enables `sshd.service` and allows TCP/22 through UFW.
 
 It intentionally does not manage shell startup files yet. Omarchy's defaults
 should remain intact while the workstation rebuild path is being rethought.
