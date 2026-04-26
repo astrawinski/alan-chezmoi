@@ -9,5 +9,5 @@
 {{- $productName := output "sh" "-c" $productNameCmd | trim }}
 {{- if ne $productName "MacBookPro8,2" }}
 .config/chromium-flags.conf
+.config/hypr/monitors.conf
 {{- end }}
-

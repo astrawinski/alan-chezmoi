@@ -40,6 +40,9 @@ This source currently manages:
 
 It also enables `sshd.service` and allows TCP/22 through UFW.
 
+On `MacBookPro8,2` hardware, it manages the Hyprland monitor config needed for
+the internal panel.
+
 It intentionally does not manage shell startup files yet. Omarchy's defaults
 should remain intact while the workstation rebuild path is being rethought.
 
