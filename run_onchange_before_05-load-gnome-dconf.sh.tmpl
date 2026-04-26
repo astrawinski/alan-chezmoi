@@ -2,8 +2,9 @@
 {{- $linux := .packages.linux -}}
 {{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
 {{- $host := get $linux.hosts $canonicalHostname | default dict -}}
+{{- $packageFamily := get $host "package_family" | default "apt" -}}
 {{- $desktopFamily := get $host "desktop_family" | default "none" -}}
-{{- if eq $desktopFamily "gnome" -}}
+{{- if and (eq $packageFamily "apt") (eq $desktopFamily "gnome") -}}
 #!/bin/sh
 set -eu
 

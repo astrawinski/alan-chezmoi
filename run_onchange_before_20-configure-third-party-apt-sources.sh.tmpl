@@ -2,6 +2,7 @@
 {{- $linux := .packages.linux -}}
 {{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
 {{- $host := get $linux.hosts $canonicalHostname | default dict -}}
+{{- $packageFamily := get $host "package_family" | default "apt" -}}
 {{- $aptGuiCommon := $linux.apt_gui_common | default (list) -}}
 {{- $rolePackages := $linux.role_packages | default dict -}}
 {{- $roles := get $host "roles" | default (list) -}}
@@ -25,7 +26,7 @@
 {{- range $aptExtra }}
 {{- if eq . "terraform" }}{{- $needsTerraform = true -}}{{- end -}}
 {{- end -}}
-{{- if or $needsBrave $needsCode $needsSignal $needsTerraform $aptSourceComponentsExtra -}}
+{{- if and (eq $packageFamily "apt") (or $needsBrave $needsCode $needsSignal $needsTerraform $aptSourceComponentsExtra) -}}
 #!/bin/sh
 set -eu
 

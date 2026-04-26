@@ -16,7 +16,7 @@ The intended boundary is:
 
 ## Normal Flow
 
-On a fresh Debian machine:
+On a fresh machine:
 
 ```bash
 chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
@@ -39,29 +39,46 @@ That gives you the normal two-stage model:
 The first apply is expected to work before LastPass login. Secret rendering is
 intentionally deferred until the explicit refresh step.
 
+## Platform Model
+
+Host identity and platform shape are separate facts.
+
+The package hooks read `.chezmoidata/packages.yaml` and use the selected
+host's `package_family`:
+
+- `apt` for Debian-family machines such as `wsub-laptop01`
+- `pacman` for Omarchy/Arch machines such as a freshly rebuilt `wsub-mbp01`
+
+Debian-only hooks, including third-party apt sources, Debian `lastpass-cli`
+builds, downloaded `.deb` packages, and GNOME dconf loading, no-op when the
+host is modeled as `pacman`. The Omarchy path starts with a smaller
+pacman/AUR package floor and lets missing packages skip with a clear message
+instead of breaking the first public `chezmoi` apply.
+
 ## WSUB Laptop Rebuild Flow
 
 For WSUB-managed management workstations, this repo is only the later
 user-environment half of the rebuild path.
 
-The full flow is:
+The current manual Omarchy flow is:
 
-1. from a trusted management workstation with a `wsub` checkout, rebuild the
-   installer media
-2. boot the target laptop from that media and complete the Debian install
-3. SSH into the fresh machine and run `workstation-bootstrap`
-4. let `workstation-bootstrap` install `chezmoi` and run the first apply from
-   this repo
-5. log into LastPass
-6. run `refresh-workstation-secrets`
-7. rerun `chezmoi update` if the post-secret handoff tells you to
+1. boot the target laptop from the upstream Omarchy ISO
+2. complete the OS install manually
+3. ensure network, sudo, `curl`, `git`, and `ca-certificates` are available
+4. install `chezmoi`
+5. run the first apply from this repo
+6. log into LastPass
+7. run `refresh-workstation-secrets`
+8. rerun `chezmoi update` if the post-secret handoff tells you to
 
-In practical terms, the operator flow after the Debian install looks like:
+In practical terms, the operator flow after the Omarchy install looks like:
 
 ```bash
-ssh-refresh-host <host>   # only if this is a rebuilt known machine
-ssh <host>
-workstation-bootstrap
+sudo hostnamectl hostname wsub-mbp01
+sudo pacman -Syu --needed curl git ca-certificates
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+export PATH="$HOME/.local/bin:$PATH"
+chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 lpass login
 refresh-workstation-secrets
 chezmoi update
@@ -69,10 +86,8 @@ chezmoi update
 
 What WSUB owns:
 
-- installer media
-- machine identity and hostname correction
-- `workstation-bootstrap`
-- the handoff into this repo
+- the documented handoff contract
+- hostname and DNS truth
 
 What this repo owns:
 
@@ -81,8 +96,8 @@ What this repo owns:
 - roaming secret restore
 - managed `~/src` checkouts
 
-This split is intentional. WSUB gets the machine to a usable user-owned
-handoff point; `alan-chezmoi` takes over from there.
+This split is intentional. The operator gets the machine to a usable
+user-owned handoff point; `alan-chezmoi` takes over from there.
 
 ## Secret Model
 

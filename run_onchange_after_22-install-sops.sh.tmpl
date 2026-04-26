@@ -2,6 +2,7 @@
 {{- $linux := .packages.linux -}}
 {{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
 {{- $host := get $linux.hosts $canonicalHostname | default dict -}}
+{{- $packageFamily := get $host "package_family" | default "apt" -}}
 {{- $rolePackages := $linux.role_packages | default dict -}}
 {{- $roles := get $host "roles" | default (list) -}}
 {{- $aptExtra := get $host "apt_extra" | default (list) -}}
@@ -18,7 +19,7 @@
 {{- range $aptExtra }}
 {{- if eq . "sops" }}{{- $needsSops = true -}}{{- end -}}
 {{- end -}}
-{{- if and $needsSops $sopsVersion -}}
+{{- if and (eq $packageFamily "apt") $needsSops $sopsVersion -}}
 #!/bin/sh
 set -eu
 

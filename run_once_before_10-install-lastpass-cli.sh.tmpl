@@ -1,4 +1,9 @@
-{{ if eq .chezmoi.os "linux" -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{- $linux := .packages.linux -}}
+{{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
+{{- $host := get $linux.hosts $canonicalHostname | default dict -}}
+{{- $packageFamily := get $host "package_family" | default "apt" -}}
+{{- if eq $packageFamily "apt" -}}
 #!/bin/sh
 set -eu
 
@@ -25,4 +30,5 @@ git clone https://github.com/lastpass/lastpass-cli.git "${build_root}/src"
 package_path="$(find "${build_root}" -maxdepth 1 -type f -name 'lastpass-cli_*.deb' | sort | tail -n 1)"
 [ -n "${package_path}" ]
 sudo apt-get install -y "${package_path}"
+{{ end -}}
 {{ end -}}
