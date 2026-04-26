@@ -60,6 +60,20 @@ packages:
       gnome:
         - task-gnome-desktop
         - gnome-shell-extension-dashtodock
+      hyprland:
+        - fonts-font-awesome
+        - foot
+        - hyprland
+        - lxpolkit
+        - pipewire
+        - pipewire-audio
+        - pipewire-pulse
+        - waybar
+        - wireplumber
+        - wofi
+        - xdg-desktop-portal
+        - xdg-desktop-portal-gtk
+        - xdg-desktop-portal-hyprland
       none: []
     hosts:
       wsub-laptop01:
@@ -75,7 +89,7 @@ packages:
           - sync_clients
         apt_extra: []
       wsub-mbp01:
-        desktop_family: gnome
+        desktop_family: hyprland
         roles:
           - bootstrap_auth
           - dev_cli

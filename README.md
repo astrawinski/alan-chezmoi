@@ -325,15 +325,32 @@ To preview another host overlay from the current machine:
 That swaps only the modeled overlay. It does not prove what is actually
 installed on the other machine.
 
-For `wsub-mbp01`, the modeled post-login package delta now keeps only the
+For `wsub-mbp01`, the modeled post-login package delta keeps the
 operator/debug wireless tools:
 
 - `iw`
 - `rfkill`
 
-The base GNOME workstation and install-time networking floor now come from the
-WSUB installer profile. After first login, `chezmoi update` still installs a
-repo-derived `snet-client` NetworkManager profile once:
+The base Hyprland/greetd workstation and install-time networking floor now
+come from the WSUB installer profile. The preferred post-login desktop family
+for `wsub-mbp01` is Hyprland, so `desktop_packages.hyprland` adds:
+
+- `hyprland`
+- `xdg-desktop-portal-hyprland`
+- `fonts-font-awesome`
+- `foot`
+- `lxpolkit`
+- `pipewire`
+- `pipewire-audio`
+- `pipewire-pulse`
+- `wofi`
+- `waybar`
+- `wireplumber`
+- `xdg-desktop-portal`
+- `xdg-desktop-portal-gtk`
+
+After first login, `chezmoi update` still installs a repo-derived
+`snet-client` NetworkManager profile once:
 
 - `~/src/wsub` is present locally
 - `sops` is available
@@ -369,6 +386,7 @@ dot_profile
 dot_gitconfig
 dot_config/
   Code/User/settings.json
+  hypr/hyprland.conf
   mimeapps.list
   onedrive/config
   wsub/gh/config.yml
