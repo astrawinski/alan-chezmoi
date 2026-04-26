@@ -1,6 +1,0 @@
-{
-  "security.workspace.trust.enabled": true,
-  "terminal.integrated.defaultProfile.linux": "bash",
-  "update.mode": "default",
-  "makefile.configureOnOpen": true
-}

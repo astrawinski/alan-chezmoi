@@ -1,8 +1,0 @@
-# Managed OneDrive client configuration for the local profile-mapped user.
-# Initial authorization and steady-state service management remain manual until
-# the sync workflow is proven on the real workstation.
-sync_dir = "/home/subnet/OneDrive"
-# Prefer IPv4 for Microsoft endpoint resolution on the real laptop. The first
-# client rollout hit hostname-resolution failures on the default dual-stack
-# path.
-ip_protocol_version = "1"
