@@ -40,6 +40,8 @@ This source currently manages:
 
 It also enables `sshd.service` and allows TCP/22 through UFW.
 
+It installs the `codex` launcher. Codex authentication remains manual.
+
 On `MacBookPro8,2` hardware, it manages the Hyprland monitor config needed for
 the internal panel.
 
