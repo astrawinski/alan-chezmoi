@@ -90,6 +90,9 @@ packages:
         apt_extra: []
       wsub-mbp01:
         desktop_family: hyprland
+        apt_source_components_extra:
+          - contrib
+          - non-free
         roles:
           - bootstrap_auth
           - dev_cli
@@ -98,8 +101,10 @@ packages:
           - workstation_utilities
           - sync_clients
         apt_extra:
+          - b43-fwcutter
           - iw
           - rfkill
+          - xorriso
     host_aliases:
       wsub-mbp01-wired: wsub-mbp01
       wsub-mbp01-wireless: wsub-mbp01

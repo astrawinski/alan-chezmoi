@@ -1,0 +1,8 @@
+---
+{{- $linux := .packages.linux -}}
+{{- $canonicalHostname := get ($linux.host_aliases | default dict) .chezmoi.hostname | default .chezmoi.hostname -}}
+wsub_localhost_overlay:
+  wsub_host_identity: {{ $canonicalHostname }}
+  wsub_host_role: laptop
+  wsub_local_trusted_capabilities:
+    - recovery_builder

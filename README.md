@@ -349,6 +349,12 @@ for `wsub-mbp01` is Hyprland, so `desktop_packages.hyprland` adds:
 - `xdg-desktop-portal`
 - `xdg-desktop-portal-gtk`
 
+The `wsub-mbp01` host overlay also enables Debian `contrib` and `non-free`
+components so local media-builder dependencies remain installable, and adds:
+
+- `b43-fwcutter`
+- `xorriso`
+
 After first login, `chezmoi update` still installs a repo-derived
 `snet-client` NetworkManager profile once:
 
