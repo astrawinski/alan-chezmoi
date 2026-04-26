@@ -24,6 +24,13 @@ chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 The hostname is chosen during the Omarchy install. Do not reset it during the
 chezmoi bootstrap unless the install was completed with the wrong hostname.
 
+After a rebuild, existing clients may have a stale SSH host key for the
+workstation. Refresh it before connecting from another machine:
+
+```bash
+ssh-refresh-host wsub-mbp01
+```
+
 ## Current Managed Surface
 
 This source currently manages:
