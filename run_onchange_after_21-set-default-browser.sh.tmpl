@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+default_browser="app.zen_browser.zen.desktop"
+
+xdg-mime default "$default_browser" text/html
+xdg-mime default "$default_browser" x-scheme-handler/http
+xdg-mime default "$default_browser" x-scheme-handler/https
+xdg-mime default "$default_browser" x-scheme-handler/about
+xdg-mime default "$default_browser" x-scheme-handler/unknown
