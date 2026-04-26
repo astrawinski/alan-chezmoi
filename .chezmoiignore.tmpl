@@ -1,0 +1,13 @@
+{{/*
+  This file uses negative selection.
+
+  Chezmoi starts with every possible file in this source tree. Ignore rules
+  then hide files that should not apply to the current machine. So for example,
+  if the productName is not "MacBookPro8,2", then ignore these files. 
+*/}}
+{{- $productNameCmd := "cat /sys/class/dmi/id/product_name 2>/dev/null || true" }}
+{{- $productName := output "sh" "-c" $productNameCmd | trim }}
+{{- if ne $productName "MacBookPro8,2" }}
+.config/chromium-flags.conf
+{{- end }}
+

@@ -1,34 +1,45 @@
 # Alan Chezmoi
 
-Minimal public-safe chezmoi starting point.
+This is Alan's personal `chezmoi` source. It is the canonical operator note for
+bringing a fresh workstation under user-state management.
 
-This repo is intentionally small. It should not encode workstation package
-sets, secret-refresh policy, LastPass helpers, repo sync, editor convergence,
-desktop settings, app launch policy, or host-specific assumptions until those
-choices are reintroduced deliberately.
+The repo is intentionally minimal right now. A first apply should preserve the
+fresh Omarchy environment and only add state that is deliberately managed here.
+Package sets, secrets, LastPass helpers, repo sync, editor setup, desktop
+settings, shell config, and app launch policy will be added back only after
+they are worked out manually on the target machine.
 
 ## Fresh Omarchy Bootstrap
 
 On a fresh `wsub-mbp01` Omarchy install:
 
+1. Complete the Omarchy installer normally.
+2. Install `chezmoi` from the Omarchy/Arch package repository.
+3. Apply this source:
+
 ```bash
-sudo hostnamectl hostname wsub-mbp01
-sudo pacman -Syu --needed curl git ca-certificates
-sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
-export PATH="$HOME/.local/bin:$PATH"
 chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 ```
 
-This first apply should only install the tiny defaults that are intentionally
-managed now. Omarchy's shell setup, secrets, LastPass, package sets, repo sync,
-editor setup, desktop config, and app launch policy are intentionally manual
-until they are redesigned.
+The hostname is chosen during the Omarchy install. Do not reset it during the
+chezmoi bootstrap unless the install was completed with the wrong hostname.
+
+## Current Managed Surface
+
+This source currently manages:
+
+- `~/.gitconfig`
+- `~/README.md`
+
+It intentionally does not manage shell startup files yet. Omarchy's defaults
+should remain intact while the workstation rebuild path is being rethought.
 
 ## Rebuild Rule
 
-Add one behavior at a time. Before adding automation, write down:
+Promote behavior into this repo one piece at a time. Before adding automation,
+capture:
 
-- the exact manual command that worked
-- whether it is OS-specific
-- whether it depends on secrets
-- whether it should run on every host or only one host
+- the exact manual command or file change that worked
+- whether it is Omarchy/Arch-specific
+- whether it depends on secrets or login state
+- whether it should apply to every workstation or only one host
