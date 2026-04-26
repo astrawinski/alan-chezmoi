@@ -45,6 +45,8 @@ It installs the `codex` launcher. Codex authentication remains manual.
 It installs Flatpak, adds Flathub, and hooks Omarchy post-update to update
 Flatpak apps alongside Omarchy updates.
 
+It installs Zen Browser from Flathub.
+
 On `MacBookPro8,2` hardware, it manages the Hyprland monitor config needed for
 the internal panel.
 
