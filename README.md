@@ -51,7 +51,7 @@ It installs Zen Browser from Flathub, adds an Omarchy-compatible launcher,
 refreshes the Omarchy launcher index, and sets Zen as the default browser.
 
 On `MacBookPro8,2` hardware, it manages the Hyprland monitor config needed for
-the internal panel.
+the internal panel and forces affected Chromium/Electron apps through Xwayland.
 
 It intentionally does not manage shell startup files yet. Omarchy's defaults
 should remain intact while the workstation rebuild path is being rethought.

@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+# Trigger when managed launcher-visible state changes.
+{{- $launcherFilesCmd := "find dot_local/bin dot_local/share/applications -type f 2>/dev/null | sort" }}
+{{- $launcherFiles := output "sh" "-c" $launcherFilesCmd | splitList "\n" }}
+{{- range $file := $launcherFiles }}
+{{- if $file }}
+# {{ $file }}: {{ include $file | sha256sum }}
+{{- end }}
+{{- end }}
+
+omarchy-refresh-applications
+omarchy-restart-walker
