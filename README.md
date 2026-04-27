@@ -46,6 +46,16 @@ It installs `lastpass-cli` from AUR. LastPass authentication remains manual.
 After logging in with `lpass login`, run `refresh-workstation-secrets` to
 restore the GitHub SSH key from LastPass.
 
+GitHub CLI authentication remains manual:
+
+```bash
+gh auth login
+```
+
+Choose GitHub.com, SSH for Git operations, skip uploading the restored SSH key,
+and authenticate GitHub CLI with the browser flow. The restored SSH key handles
+Git transport; `gh` still needs its own token for GitHub API access.
+
 It installs Flatpak, adds Flathub, and hooks Omarchy post-update to update
 Flatpak apps alongside Omarchy updates.
 
