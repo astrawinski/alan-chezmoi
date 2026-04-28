@@ -51,7 +51,8 @@ On `MacBookPro8,2` hardware, it also applies the hardware-specific desktop
 workarounds needed for that laptop:
 
 - Hyprland monitor configuration for the internal panel
-- Xwayland launch wrappers for affected Chromium/Electron apps
+- Xwayland launch wrappers for affected Chromium/Electron apps, including
+  Signal and Visual Studio Code
 
 Shell startup files are intentionally unmanaged. Keep Omarchy's defaults in
 place until there is a proven reason to replace them.

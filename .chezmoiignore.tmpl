@@ -10,7 +10,10 @@
 {{- if ne $productName "MacBookPro8,2" }}
 .config/chromium-flags.conf
 .config/hypr/monitors.conf
+.local/bin/code
 .local/bin/signal-desktop
+.local/share/applications/code-url-handler.desktop
+.local/share/applications/code.desktop
 .local/share/applications/signal.desktop
 10-reload-hyprland.sh
 {{- end }}
