@@ -68,7 +68,7 @@ After LastPass is authenticated, refresh workstation secrets:
 refresh-workstation-secrets
 ```
 
-That restores the GitHub SSH key from LastPass and then runs
+That restores the GitHub SSH key and SOPS age key from LastPass, then runs
 `sync-user-repos`. The repo sync creates `~/src`, then clones or fast-forward
 pulls the management repo set:
 
