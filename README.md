@@ -37,6 +37,7 @@ right now:
 - a local `~/README.md`
 - enabled `sshd.service`
 - TCP/22 allowed through UFW
+- WSUB internal root CA trust
 - Codex launcher
 - LastPass CLI
 - management CLI tools: Ansible, SOPS, and Terraform

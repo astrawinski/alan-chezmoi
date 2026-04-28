@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+cert_source="${HOME}/.local/share/wsub/certs/wsub-internal-root-ca.crt"
+cert_target="/etc/ca-certificates/trust-source/anchors/wsub-internal-root-ca.crt"
+
+if [ ! -f "${cert_source}" ]; then
+  printf '[chezmoi] WSUB root CA source is missing: %s\n' "${cert_source}" >&2
+  exit 1
+fi
+
+if ! command -v update-ca-trust >/dev/null 2>&1; then
+  printf '[chezmoi] update-ca-trust is not available; skipping WSUB root CA trust.\n' >&2
+  exit 0
+fi
+
+sudo install -m 0644 "${cert_source}" "${cert_target}"
+sudo update-ca-trust
