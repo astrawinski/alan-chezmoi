@@ -39,6 +39,7 @@ right now:
 - TCP/22 allowed through UFW
 - Codex launcher
 - LastPass CLI
+- management CLI tools: Ansible, SOPS, and Terraform
 - Flatpak and Flathub
 - Zen Browser from Flathub
 - Zen as the default browser
