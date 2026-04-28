@@ -52,6 +52,8 @@ workarounds needed for that laptop:
 
 - Hyprland monitor configuration for the internal panel
 - Xwayland launch wrappers for affected Chromium/Electron apps
+- VS Code launchers disable GPU compositing to avoid flicker on the legacy AMD
+  graphics path
 
 Shell startup files are intentionally unmanaged. Keep Omarchy's defaults in
 place until there is a proven reason to replace them.
