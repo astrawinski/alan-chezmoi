@@ -41,6 +41,7 @@ right now:
 - Codex launcher
 - LastPass CLI
 - management CLI tools: Ansible, SOPS, and Terraform
+- official Microsoft Visual Studio Code from the AUR
 - Flatpak and Flathub
 - Zen Browser from Flathub
 - Zen as the default browser
