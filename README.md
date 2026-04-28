@@ -39,6 +39,7 @@ right now:
 - TCP/22 allowed through UFW
 - WSUB internal root CA trust
 - Codex launcher
+- Cavekit Codex adapter skills
 - LastPass CLI
 - management CLI tools: Ansible, SOPS, and Terraform
 - official Microsoft Visual Studio Code from the AUR
