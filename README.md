@@ -96,15 +96,32 @@ transport; `gh` still needs its own API token.
 ## Management Validation
 
 After `~/src/wsub` exists, validate that the workstation is ready to operate
-the estate:
+the estate. First refresh the repo-managed WSUB SSH config and known-hosts
+state from the current WSUB inventory:
 
 ```bash
 cd ~/src/wsub
+scripts/recovery/host-ssh-install.sh --refresh-known-hosts
+```
+
+Then run the workstation-only validation:
+
+```bash
+scripts/platform/management-workstation-validate.sh --skip-estate-lightweight
+```
+
+That proves the workstation can project secrets, use the shared MinIO
+Terraform state backend, produce no-change Terraform plans, and reach the PBS
+hosts with the repo-managed SSH trust model.
+
+After that passes, run the full management validation:
+
+```bash
 ./scripts/platform/management-workstation-validate.sh
 ```
 
-Failures from that script are the next bootstrap gaps. Fix them manually first,
-then promote the durable part of the fix into this repo.
+Failures from either validation path are the next bootstrap gaps. Fix them
+manually first, then promote the durable part of the fix into this repo.
 
 ## Change Policy
 
