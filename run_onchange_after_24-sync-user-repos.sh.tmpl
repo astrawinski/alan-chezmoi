@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+# Best effort during apply; refresh-workstation-secrets retries after the
+# GitHub SSH key has been restored from LastPass.
+if [ ! -x "${HOME}/.local/bin/sync-user-repos" ]; then
+  printf '[chezmoi] sync-user-repos is not installed yet; skipping.\n' >&2
+  exit 0
+fi
+
+if ! "${HOME}/.local/bin/sync-user-repos"; then
+  printf '[chezmoi] repo sync did not complete during apply; continuing.\n' >&2
+fi

@@ -1,0 +1,64 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -eu
+
+checkout_root="${HOME}/src"
+mkdir -p "${checkout_root}"
+
+if ! command -v git >/dev/null 2>&1; then
+  printf '[chezmoi] git is not installed yet; skipping repo sync.\n' >&2
+  exit 0
+fi
+
+if [ ! -f "${HOME}/.ssh/id_ed25519" ]; then
+  printf '[chezmoi] GitHub SSH key is not restored yet; skipping repo sync.\n' >&2
+  exit 0
+fi
+
+sync_repo() {
+  name="$1"
+  origin="$2"
+  repo_dir="${checkout_root}/${name}"
+
+  if [ -d "${repo_dir}/.git" ]; then
+    current_origin="$(git -C "${repo_dir}" remote get-url origin 2>/dev/null || true)"
+    if [ "${current_origin}" != "${origin}" ]; then
+      printf '[chezmoi] %s has origin %s; expected %s. Leaving it alone.\n' \
+        "${repo_dir}" "${current_origin:-<missing>}" "${origin}" >&2
+      return 0
+    fi
+
+    if ! git -C "${repo_dir}" diff --quiet ||
+       ! git -C "${repo_dir}" diff --cached --quiet; then
+      printf '[chezmoi] %s has local changes; skipping pull.\n' "${repo_dir}" >&2
+      return 0
+    fi
+
+    printf '[chezmoi] Pulling %s\n' "${repo_dir}"
+    git -C "${repo_dir}" pull --ff-only
+    return 0
+  fi
+
+  if [ -e "${repo_dir}" ]; then
+    printf '[chezmoi] %s exists but is not a git checkout; leaving it alone.\n' \
+      "${repo_dir}" >&2
+    return 0
+  fi
+
+  printf '[chezmoi] Cloning %s into %s\n' "${origin}" "${repo_dir}"
+  git clone "${origin}" "${repo_dir}"
+}
+
+sync_failed=0
+
+sync_repo wsub git@github.com:astrawinski/wsub.git || sync_failed=1
+sync_repo alan-chezmoi git@github.com:astrawinski/alan-chezmoi.git || sync_failed=1
+sync_repo terraform-provider-unifi \
+  git@github.com:astrawinski/terraform-provider-unifi.git || sync_failed=1
+sync_repo cavekit git@github.com:astrawinski/cavekit.git || sync_failed=1
+sync_repo cavekit-codex git@github.com:astrawinski/cavekit-codex.git || sync_failed=1
+
+if [ "${sync_failed}" -ne 0 ]; then
+  exit 1
+fi
+{{ end -}}

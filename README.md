@@ -1,79 +1,115 @@
 # Alan Chezmoi
 
-This is Alan's personal `chezmoi` source. It is the canonical operator note for
-bringing a fresh workstation under user-state management.
+This is Alan's personal `chezmoi` source. Its job is to bring a fresh
+workstation under user-state management without replacing the base operating
+system's normal desktop experience.
 
-The repo is intentionally minimal right now. A first apply should preserve the
-fresh Omarchy environment and only add state that is deliberately managed here.
-Package sets, secrets, LastPass helpers, repo sync, editor setup, desktop
-settings, shell config, and app launch policy will be added back only after
-they are worked out manually on the target machine.
+The current target is a fresh Omarchy workstation. The repo is deliberately
+small while the rebuild path is being rediscovered. Add durable behavior here
+only after the manual step has been proven on the target machine.
 
 ## Fresh Omarchy Bootstrap
 
-On a fresh `wsub-mbp01` Omarchy install:
+Complete the Omarchy installer normally. The hostname is set during install, so
+do not reset it with `hostnamectl` unless the install was completed with the
+wrong name.
 
-1. Complete the Omarchy installer normally.
-2. Install `chezmoi` from the Omarchy/Arch package repository.
-3. Apply this source:
+Install `chezmoi` from the Omarchy/Arch package repository, then apply this
+source:
 
 ```bash
 chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 ```
 
-The hostname is chosen during the Omarchy install. Do not reset it during the
-chezmoi bootstrap unless the install was completed with the wrong hostname.
-
-After a rebuild, existing clients may have a stale SSH host key for the
-workstation. Refresh it before connecting from another machine:
+After a rebuild, other machines may still have the old SSH host key cached for
+the workstation. Refresh that cache before connecting:
 
 ```bash
 ssh-refresh-host wsub-mbp01
 ```
 
-## Current Managed Surface
+## First-Apply Flow
 
-This source currently manages:
+The first apply establishes the workstation baseline that is safe to manage
+right now:
 
-- `~/.gitconfig`
-- `~/README.md`
+- basic Git identity through `~/.gitconfig`
+- a local `~/README.md`
+- enabled `sshd.service`
+- TCP/22 allowed through UFW
+- Codex launcher
+- LastPass CLI
+- Flatpak and Flathub
+- Zen Browser from Flathub
+- Zen as the default browser
+- Omarchy launcher refresh hooks
 
-It also enables `sshd.service` and allows TCP/22 through UFW.
+On `MacBookPro8,2` hardware, it also applies the hardware-specific desktop
+workarounds needed for that laptop:
 
-It installs the `codex` launcher. Codex authentication remains manual.
+- Hyprland monitor configuration for the internal panel
+- Xwayland launch wrappers for affected Chromium/Electron apps
 
-It installs `lastpass-cli` from AUR. LastPass authentication remains manual.
-After logging in with `lpass login`, run `refresh-workstation-secrets` to
-restore the GitHub SSH key from LastPass.
+Shell startup files are intentionally unmanaged. Keep Omarchy's defaults in
+place until there is a proven reason to replace them.
 
-GitHub CLI authentication remains manual:
+## Secrets And Repos
+
+LastPass authentication is manual:
+
+```bash
+lpass login
+```
+
+After LastPass is authenticated, refresh workstation secrets:
+
+```bash
+refresh-workstation-secrets
+```
+
+That restores the GitHub SSH key from LastPass and then runs
+`sync-user-repos`. The repo sync creates `~/src`, then clones or fast-forward
+pulls the management repo set:
+
+- `wsub`
+- `alan-chezmoi`
+- `terraform-provider-unifi`
+- `cavekit`
+- `cavekit-codex`
+
+Repo sync is also attempted during `chezmoi apply` if the GitHub SSH key is
+already present. Existing non-git directories, repos with unexpected origins,
+and repos with local changes are left alone.
+
+GitHub CLI authentication is also manual:
 
 ```bash
 gh auth login
 ```
 
-Choose GitHub.com, SSH for Git operations, skip uploading the restored SSH key,
-and authenticate GitHub CLI with the browser flow. The restored SSH key handles
-Git transport; `gh` still needs its own token for GitHub API access.
+Use GitHub.com, SSH for Git operations, skip uploading the restored SSH key,
+and authenticate `gh` with the browser flow. The restored SSH key handles Git
+transport; `gh` still needs its own API token.
 
-It installs Flatpak, adds Flathub, and hooks Omarchy post-update to update
-Flatpak apps alongside Omarchy updates.
+## Management Validation
 
-It installs Zen Browser from Flathub, adds an Omarchy-compatible launcher,
-refreshes the Omarchy launcher index, and sets Zen as the default browser.
+After `~/src/wsub` exists, validate that the workstation is ready to operate
+the estate:
 
-On `MacBookPro8,2` hardware, it manages the Hyprland monitor config needed for
-the internal panel and forces affected Chromium/Electron apps through Xwayland.
+```bash
+cd ~/src/wsub
+./scripts/platform/management-workstation-validate.sh
+```
 
-It intentionally does not manage shell startup files yet. Omarchy's defaults
-should remain intact while the workstation rebuild path is being rethought.
+Failures from that script are the next bootstrap gaps. Fix them manually first,
+then promote the durable part of the fix into this repo.
 
-## Rebuild Rule
+## Change Policy
 
-Promote behavior into this repo one piece at a time. Before adding automation,
-capture:
+Promote behavior into this source one piece at a time. Before adding
+automation, capture:
 
 - the exact manual command or file change that worked
 - whether it is Omarchy/Arch-specific
 - whether it depends on secrets or login state
-- whether it should apply to every workstation or only one host
+- whether it applies globally, to one host, or to one hardware model
