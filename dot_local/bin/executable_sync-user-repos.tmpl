@@ -15,6 +15,34 @@ if [ ! -f "${HOME}/.ssh/id_ed25519" ]; then
   exit 0
 fi
 
+configure_chezmoi_source_remote() {
+  ssh_origin="git@github.com:astrawinski/alan-chezmoi.git"
+  source_dir="$(chezmoi source-path 2>/dev/null || printf '%s/.local/share/chezmoi\n' "${HOME}")"
+
+  if [ ! -d "${source_dir}/.git" ]; then
+    return 0
+  fi
+
+  current_origin="$(git -C "${source_dir}" remote get-url origin 2>/dev/null || true)"
+  case "${current_origin}" in
+    "${ssh_origin}")
+      return 0
+      ;;
+    "https://github.com/astrawinski/alan-chezmoi.git" | \
+      "https://astrawinski@github.com/astrawinski/alan-chezmoi.git")
+      printf '[chezmoi] Switching chezmoi source origin to %s\n' "${ssh_origin}"
+      git -C "${source_dir}" remote set-url origin "${ssh_origin}"
+      ;;
+    "")
+      return 0
+      ;;
+    *)
+      printf '[chezmoi] chezmoi source has origin %s; expected %s. Leaving it alone.\n' \
+        "${current_origin}" "${ssh_origin}" >&2
+      ;;
+  esac
+}
+
 sync_repo() {
   name="$1"
   origin="$2"
@@ -51,6 +79,7 @@ sync_repo() {
 
 sync_failed=0
 
+configure_chezmoi_source_remote || sync_failed=1
 sync_repo wsub git@github.com:astrawinski/wsub.git || sync_failed=1
 sync_repo alan-chezmoi git@github.com:astrawinski/alan-chezmoi.git || sync_failed=1
 sync_repo terraform-provider-unifi \

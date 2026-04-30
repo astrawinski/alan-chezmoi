@@ -20,6 +20,11 @@ this source:
 ```bash
 chezmoi init --apply https://github.com/astrawinski/alan-chezmoi.git
 ```
+
+The HTTPS bootstrap URL works before GitHub SSH credentials are restored.
+After `refresh-workstation-secrets` restores the GitHub SSH key,
+`sync-user-repos` switches the local chezmoi source checkout to the SSH remote.
+
 ## First-Apply Flow
 
 The first apply establishes the workstation baseline that is safe to manage
