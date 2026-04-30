@@ -1,0 +1,31 @@
+#!/bin/sh
+set -eu
+
+if ! command -v hyprctl >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
+  exit 1
+fi
+
+gurk_pid="$(pgrep -n -x gurk || true)"
+if [ -z "${gurk_pid}" ]; then
+  exit 1
+fi
+
+pid="${gurk_pid}"
+while [ "${pid}" -gt 1 ]; do
+  address="$(
+    hyprctl clients -j |
+      jq -r --argjson pid "${pid}" '.[] | select(.pid == $pid) | .address' |
+      head -n 1
+  )"
+
+  if [ -n "${address}" ] && [ "${address}" != "null" ]; then
+    exec hyprctl dispatch focuswindow "address:${address}"
+  fi
+
+  pid="$(ps -o ppid= -p "${pid}" | tr -d ' ' || true)"
+  if [ -z "${pid}" ]; then
+    exit 1
+  fi
+done
+
+exit 1
