@@ -44,6 +44,7 @@ right now:
 - Zen Browser from Flathub
 - Zen as the default browser
 - application launcher refresh hooks
+- rclone-based OneDrive mount service
 
 On `MacBookPro8,2` hardware, it also applies the hardware-specific desktop
 workarounds needed for that laptop:
@@ -93,6 +94,21 @@ gh auth login
 Use GitHub.com, SSH for Git operations, skip uploading the restored SSH key,
 and authenticate `gh` with the browser flow. The restored SSH key handles Git
 transport; `gh` still needs its own API token.
+
+## OneDrive
+
+OneDrive is mounted through `rclone` using a managed user systemd service.
+The service and setup helper are managed here, but the Microsoft OAuth token in
+`~/.config/rclone/rclone.conf` is local machine state and is not committed.
+
+After first apply, configure the OneDrive remote and start the service:
+
+```bash
+onedrive-setup
+```
+
+That creates the `onedrive:` rclone remote, mounts it at `~/OneDrive`, and
+enables `rclone-onedrive.service` for future logins.
 
 ## Management Validation
 

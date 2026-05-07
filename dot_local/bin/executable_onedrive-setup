@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+if ! command -v rclone >/dev/null 2>&1; then
+  printf 'rclone is not installed. Run chezmoi apply first, or install rclone.\n' >&2
+  exit 1
+fi
+
+mkdir -p "${HOME}/OneDrive"
+
+if ! rclone listremotes | grep -qx 'onedrive:'; then
+  printf 'Creating rclone remote "onedrive". Complete the Microsoft browser login when prompted.\n' >&2
+  rclone config create onedrive onedrive
+fi
+
+systemctl --user daemon-reload
+systemctl --user enable --now rclone-onedrive.service
+systemctl --user status --no-pager rclone-onedrive.service

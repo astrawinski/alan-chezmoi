@@ -1,0 +1,14 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+set -eu
+
+systemctl --user daemon-reload
+
+if [ -f "${HOME}/.config/rclone/rclone.conf" ] &&
+   command -v rclone >/dev/null 2>&1 &&
+   rclone listremotes | grep -qx 'onedrive:'; then
+  systemctl --user enable --now rclone-onedrive.service
+else
+  printf '[chezmoi] OneDrive is not configured yet; run onedrive-setup after signing in.\n' >&2
+fi
+{{ end -}}
